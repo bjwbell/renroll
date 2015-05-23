@@ -1,6 +1,6 @@
 {
     "GmailAddress": "bryan.w.bell@gmail.com",
     "GmailPassword": "psswd",
-    "GoogleClientID": "25276371904-hmd2oc8i31drnhd2fm5t7h76l2bduu81.apps.googleusercontent.com",
-    "GoogleClientSecret": "EXG-rp2uk2rJloFQcSEl9gJi"
+    "GoogleClientID": "CLIENT_ID",
+    "GoogleClientSecret": "CLIENT_SECRET"
 }
