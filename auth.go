@@ -24,7 +24,7 @@ func googleOAuth2Config(domain string) *oauth2.Config {
  		ClientID:     appConf.GoogleClientID,
 		ClientSecret: appConf.GoogleClientSecret,
  		RedirectURL:  "postmessage",
-		Scopes:       []string{"https://www.googleapis.com/auth/plus.profile.emails.read"},
+		Scopes:       []string{"email"},
 		Endpoint: google.Endpoint,
  	}
 	return conf
