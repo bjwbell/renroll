@@ -71,6 +71,7 @@ func oauth2callback(w http.ResponseWriter, r *http.Request) {
 		Kind string
 		Emails []Email
 	}
+	fmt.Println("oauth2callback - response: " + str)
 	dec := json.NewDecoder(strings.NewReader(str))
 	var m OAuth2Response
 	if err := dec.Decode(&m); err != nil {
