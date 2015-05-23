@@ -79,7 +79,13 @@ func oauth2callback(w http.ResponseWriter, r *http.Request) {
 	for _, v := range m.Emails {
 		fmt.Println("email (value, type): " + v.Value + ", " + v.Type)
 	}
-	email := m.Emails[0].Value
+	email := "dummy@dummy.com"
+	if len(m.Emails) != 1 {
+		fmt.Println("NO VALID EMAIL OR TOO MANY")
+		
+	} else {	
+		email = m.Emails[0].Value
+	}
 	if newAccount == "true" {
 		fmt.Println("NEW ACCOUNT")
 		dbCreate(email)
