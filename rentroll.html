@@ -1,7 +1,17 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="stylesheet.css" />
-    <title>Renroll - Sign Up</title>
+    <style>
+     #signinButton {
+         position: relative;
+         float: right;
+     }
+     #signoutButton {
+         position: relative;
+         float: right;
+     }
+    </style>
+    <title>Renroll - Rent Roll</title>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -13,25 +23,25 @@
     <script src="https://apis.google.com/js/client:platform.js" async defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>    
     <script>
+        function get(name){
+        if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+        return decodeURIComponent(name[1]);
+        }
      function signinCallback(authResult) {
          if (authResult['status']['signed_in']) {
              client_id = authResult['client_id']
              access_token = authResult['access_token']
              code = authResult['code']
-             //console.log('Sign-in result: ' + authResult);
-             // Update the app to reflect a signed in user
-             // Hide the sign-in button now that the user is authorized, for example:
              document.getElementById('signinButton').setAttribute('style', 'display: none');
+             document.getElementById('signoutButton').innerHTML = "<a href=\"\">Sign Out <br/>" + get("email") + "</a>";
              $.ajax({
                  url: "/oauth2callback",
                  data: {
                      client_id: client_id,
                      access_token: access_token,
-                     code: code,
-                     new_account: true,
+                     code: code,                   
                  },
                  success: function( data ) {
-                     window.location.href = '/rentroll?email=' + data;
                  }
              });
          } else {
@@ -44,40 +54,43 @@
          }
      }
     </script>
-
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <h1 class="doordash-logo doordash-logo-inverted">
-        &nbsp;&nbsp;<a href="index.html" id="renroll">Renroll</a>
+          &nbsp;&nbsp;<a href="index.html" id="renroll">Renroll</a>
       </h1>
     </div>
-
-  </div>
-</nav>
     <br/>
-    <br/>
-    <br/>
-    <br/>
-    <p>
-        <br/>
-        <h2>Create Account With:</h2>
-      <span id="signinButton">
-          <span
+    <span id="signinButton">
+        <span
     class="g-signin"
     data-callback="signinCallback"
     data-clientid="{{ .GoogleClientID }}"
     data-cookiepolicy="single_host_origin"
     data-scope="profile">
-          </span>
-      </span>
-      <br/>
+        </span>        
+    </span>
+    <span id="signoutButton">
+    </span>
+  </div>
+    </nav>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <h1>Rent Roll</h1>
+    {{range .Tenants}}
+    <h1>Tenant {{.Name}}</h1>
+    <br/>
+    {{end}}
+    <br/>
     <center>
-<div id="bottombar">
-  <a href="index.html" id="renroll">Home</a>
-&nbsp;&nbsp;&nbsp; 
-</div>
+        <div id="bottombar">
+            <a href="index.html" id="renroll">Home</a>
+            &nbsp;&nbsp;&nbsp; 
+        </div>
     </center>
 </body></html>
