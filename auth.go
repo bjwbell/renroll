@@ -46,7 +46,9 @@ func readHttpBody(response *http.Response) string {
 
 func oauth2callback(w http.ResponseWriter, r *http.Request) {
 	code := r.FormValue("code")
+	fmt.Println("oauth2callback - url: " + r.URL.RawQuery)
 	fmt.Println("oauth2callback - code: " + code)
+	
 	newAccount := r.FormValue("new_account")
  	conf := googleOAuth2Config(domain(r))
 	tok, err := conf.Exchange(oauth2.NoContext, code)
