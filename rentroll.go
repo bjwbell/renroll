@@ -6,6 +6,7 @@ import (
 
 type RentRoll struct {
 	GoogleClientID string
+	GooglePlusScopes string
 	GoogleAnalyticsId string
 	Tenants []Tenant	
 }
@@ -21,6 +22,7 @@ func rentRollHandler(w http.ResponseWriter, r *http.Request) {
 	
 	rentroll := RentRoll{GoogleAnalyticsId: conf.GoogleAnalyticsId,
 		GoogleClientID: conf.GoogleClientID,
+		GooglePlusScopes: conf.GooglePlusScopes,
 		Tenants: tenants}
 	
 	t, _ := template.ParseFiles("rentroll.html")

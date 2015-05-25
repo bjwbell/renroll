@@ -24,7 +24,7 @@ func googleOAuth2Config(domain string) *oauth2.Config {
  		ClientID:     appConf.GoogleClientID,
 		ClientSecret: appConf.GoogleClientSecret,
  		RedirectURL:  "postmessage",
-		Scopes:       []string{"email"},
+		Scopes:       []string{},
 		Endpoint: google.Endpoint,
  	}
 	return conf
@@ -62,7 +62,7 @@ func oauth2callback(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	client := conf.Client(oauth2.NoContext, tok)
- 	response, err := client.Get("https://www.googleapis.com/plus/v1/people/me")
+ 	response, err := client.Get("https://www.googleapis.com/plus/v1/people/me?fields=emails")
  	// handle err. You need to change this into something more robust
  	// such as redirect back to home page with error message
  	if err != nil {

@@ -13,6 +13,7 @@ type Configuration struct {
 	GmailPassword          string
 	GoogleClientID         string
 	GoogleClientSecret     string
+	GooglePlusScopes       string	
 	GoogleAnalyticsId      string
 }
 

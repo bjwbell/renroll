@@ -1,7 +1,8 @@
 {
-    "GmailAddress": "add@gmail.com",
+    "GmailAddress": "addr@gmail.com",
     "GmailPassword": "psswd",
     "GoogleClientID": "GOOGLE-CLIENTID",
     "GoogleClientSecret": "GOOGLE-CLIENTSECRET",
     "GoogleAnalyticsID": "GOOGLE-ANALYTICS-ID"
+    "GooglePlusScopes": "profile email",
 }
