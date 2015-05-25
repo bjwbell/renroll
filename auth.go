@@ -46,8 +46,14 @@ func readHttpBody(response *http.Response) string {
 
 func oauth2callback(w http.ResponseWriter, r *http.Request) {
 	code := r.FormValue("code")
-	fmt.Println("oauth2callback - url: " + r.URL.RawQuery)
-	fmt.Println("oauth2callback - code: " + code)
+	if code == "" {
+		log.Print("oauth2callback - NO CODE")
+		email := "dummy@dummy.com"
+		w.Write([]byte(email))
+		return
+	}
+	log.Print("oauth2callback - url: " + r.URL.RawQuery)
+	log.Print("oauth2callback - code: " + code)
 	
 	newAccount := r.FormValue("new_account")
  	conf := googleOAuth2Config(domain(r))
@@ -70,25 +76,27 @@ func oauth2callback(w http.ResponseWriter, r *http.Request) {
 	type OAuth2Response struct {
 		Kind string
 		Emails []Email
+		Id string
 	}
-	fmt.Println("oauth2callback - response: " + str)
+	log.Print("oauth2callback - response: " + str)
 	dec := json.NewDecoder(strings.NewReader(str))
 	var m OAuth2Response
 	if err := dec.Decode(&m); err != nil {
 		log.Fatal(err)
 	}
 	for _, v := range m.Emails {
-		fmt.Println("email (value, type): " + v.Value + ", " + v.Type)
+		log.Print("oauth2callback - email (value, type): " + v.Value + ", " + v.Type)
 	}
+	
 	email := "dummy@dummy.com"
 	if len(m.Emails) != 1 {
-		fmt.Println("NO VALID EMAIL OR TOO MANY")
+		log.Print("oauth2callback - NO VALID EMAIL OR TOO MANY")
 		
 	} else {	
 		email = m.Emails[0].Value
 	}
 	if newAccount == "true" {
-		fmt.Println("NEW ACCOUNT")
+		log.Print("oauth2callback - NEW ACCOUNT")
 		dbCreate(email)
 		dbInsert(email, "#1")
 	}

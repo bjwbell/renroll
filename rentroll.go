@@ -6,7 +6,8 @@ import (
 
 type RentRoll struct {
 	GoogleClientID string
-	Tenants []Tenant
+	GoogleAnalyticsId string
+	Tenants []Tenant	
 }
 
 type Tenant struct {
@@ -16,7 +17,12 @@ type Tenant struct {
 func rentRollHandler(w http.ResponseWriter, r *http.Request) {
 	dbName := r.FormValue("email")
 	tenants := dbReadTenants(dbName)
-	rentroll := RentRoll{GoogleClientID: configuration().GoogleClientID, Tenants: tenants}
+	conf := configuration()
+	
+	rentroll := RentRoll{GoogleAnalyticsId: conf.GoogleAnalyticsId,
+		GoogleClientID: conf.GoogleClientID,
+		Tenants: tenants}
+	
 	t, _ := template.ParseFiles("rentroll.html")
 	t.Execute(w, rentroll)
 }

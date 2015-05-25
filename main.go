@@ -1,31 +1,19 @@
-// Copyright 2010 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
 package main
 import (
 	"fmt"
-	"net/http"
-	"html/template"
-	"log"
-	"net/smtp"
 	"encoding/json"
+	"net/http"
+	"log"
 	"os"
+	"net/smtp"
 )
-type SubmitData struct {
-	GoogleClientID string
-}
-func submitHandler(w http.ResponseWriter, r *http.Request) {
-	submitData := SubmitData{GoogleClientID: configuration().GoogleClientID}
-	t, _ := template.ParseFiles("submit.html")
-	t.Execute(w, submitData)
-}
 
 type Configuration struct {
 	GmailAddress           string
 	GmailPassword          string
 	GoogleClientID         string
 	GoogleClientSecret     string
+	GoogleAnalyticsId      string
 }
 
 func configuration() Configuration {
@@ -63,6 +51,7 @@ func main() {
 	http.HandleFunc("/sendemail", sendEmailHandler)
 	http.HandleFunc("/oauth2callback", oauth2callback)
 	http.HandleFunc("/rentroll", rentRollHandler)
+	http.HandleFunc("/index.html", indexHandler)
 	http.Handle("/", http.FileServer(http.Dir("./")))
 	if http.ListenAndServe(":80", nil) != nil {
 		panic(http.ListenAndServe(":8080", nil))

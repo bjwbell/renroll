@@ -1,6 +1,7 @@
 {
-    "GmailAddress": "bryan.w.bell@gmail.com",
+    "GmailAddress": "add@gmail.com",
     "GmailPassword": "psswd",
-    "GoogleClientID": "CLIENT_ID",
-    "GoogleClientSecret": "CLIENT_SECRET"
+    "GoogleClientID": "GOOGLE-CLIENTID",
+    "GoogleClientSecret": "GOOGLE-CLIENTSECRET",
+    "GoogleAnalyticsID": "GOOGLE-ANALYTICS-ID"
 }
