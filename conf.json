@@ -3,8 +3,8 @@
     "FacebookScopes": "public_profile email",
     "GmailAddress": "add@gmail.com",
     "GmailPassword": "psswd",
-    "GoogleClientID": "GOOGLE-CLIENTID",
+    "GoogleClientId": "GOOGLE-CLIENTID",
     "GoogleClientSecret": "GOOGLE-CLIENTSECRET",
-    "GoogleAnalyticsID": "GOOGLE-ANALYTICS-ID",
+    "GoogleAnalyticsId": "GOOGLE-ANALYTICS-ID",
     "FacebookAppId": "FACEBOOK-APPID"
 }
