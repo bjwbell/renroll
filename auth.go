@@ -21,7 +21,7 @@ type AccessToken struct {
 func googleOAuth2Config(domain string) *oauth2.Config {
 	appConf := configuration()
 	conf := &oauth2.Config{
- 		ClientID:     appConf.GoogleClientID,
+ 		ClientID:     appConf.GoogleClientId,
 		ClientSecret: appConf.GoogleClientSecret,
  		RedirectURL:  "postmessage",
 		Scopes:       []string{},

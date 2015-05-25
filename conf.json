@@ -1,8 +1,10 @@
 {
-    "GmailAddress": "addr@gmail.com",
+    "GooglePlusScopes": "profile email",
+    "FacebookScopes": "public_profile email",
+    "GmailAddress": "add@gmail.com",
     "GmailPassword": "psswd",
     "GoogleClientID": "GOOGLE-CLIENTID",
     "GoogleClientSecret": "GOOGLE-CLIENTSECRET",
-    "GoogleAnalyticsID": "GOOGLE-ANALYTICS-ID"
-    "GooglePlusScopes": "profile email",
+    "GoogleAnalyticsID": "GOOGLE-ANALYTICS-ID",
+    "FacebookAppId": "FACEBOOK-APPID"
 }

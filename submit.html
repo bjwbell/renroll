@@ -47,36 +47,64 @@
 
   </head>
   <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <h1 class="doordash-logo doordash-logo-inverted">
-        &nbsp;&nbsp;<a href="index.html" id="renroll">Renroll</a>
-      </h1>
-    </div>
+      <script>
+       window.fbAsyncInit = function() {
+           FB.init({
+               appId      : "{{ .FacebookAppId }}",
+               xfbml      : true,
+               version    : 'v2.3'
+           });
+       };
 
-  </div>
-</nav>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <p>
-        <br/>
-        <h2>Create Account With:</h2>
-      <span id="signinButton">
-          <span
-    class="g-signin"
-    data-callback="signinCallback"
-    data-clientid="{{ .GoogleClientID }}"
-    data-cookiepolicy="single_host_origin"
-    data-scope="{{ .GooglePlusScopes }}">
-          </span>
-      </span>
+       (function(d, s, id){
+           var js, fjs = d.getElementsByTagName(s)[0];
+           if (d.getElementById(id)) {return;}
+           js = d.createElement(s); js.id = id;
+           js.src = "//connect.facebook.net/en_US/sdk.js";
+           fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+      </script>
+      
+      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+          <div class="container">
+              <div class="navbar-header">
+                  <h1 class="doordash-logo doordash-logo-inverted">
+                      &nbsp;&nbsp;<a href="index.html" id="renroll">Renroll</a>
+                  </h1>
+              </div>
+          </div>
+      </nav>
       <br/>
+      <br/>
+      <br/>
+      <br/>
+      <p>
+          <br/>
+          <h2>Sign Up With:</h2>
+          <span id="signinButton">
+              <span class="g-signin"
+                    data-callback="signinCallback"
+                    data-height="tall"
+                    data-width="wide"
+                    data-clientid="{{ .GoogleClientId }}"
+                    data-cookiepolicy="single_host_origin"
+                    data-scope="{{ .GooglePlusScopes }}">
+              </span>
+          </span>
+          <br/>
+          <!-- <span class="fb-login-button"
+               data-max-rows="1"
+               data-size="xlarge"
+               data-show-faces="false"
+               data-scope="{{ .FacebookScopes }}"
+               data-auto-logout-link="true">
+          </span> -->
+          <br/>
+          <br/>
     <center>
 <div id="bottombar">
-  <a href="index.html" id="renroll">Home</a>
+    <a href="index">Home</a>
+    <a href="about">About</a>
 &nbsp;&nbsp;&nbsp; 
 </div>
     </center>

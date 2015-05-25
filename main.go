@@ -3,6 +3,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"net/http"
+	"html/template"
 	"log"
 	"os"
 	"net/smtp"
@@ -11,10 +12,12 @@ import (
 type Configuration struct {
 	GmailAddress           string
 	GmailPassword          string
-	GoogleClientID         string
+	GoogleClientId         string
 	GoogleClientSecret     string
 	GooglePlusScopes       string	
 	GoogleAnalyticsId      string
+	FacebookScopes         string
+	FacebookAppId          string
 }
 
 func configuration() Configuration {
@@ -43,6 +46,11 @@ func sendEmailHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
+func aboutHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("about.html")
+	t.Execute(w, configuration())
+}
+
 func domain(r *http.Request) string {
 	return r.Host
 }
@@ -52,7 +60,9 @@ func main() {
 	http.HandleFunc("/sendemail", sendEmailHandler)
 	http.HandleFunc("/oauth2callback", oauth2callback)
 	http.HandleFunc("/rentroll", rentRollHandler)
-	http.HandleFunc("/index.html", indexHandler)
+	//http.HandleFunc("/index.html", indexHandler)
+	http.HandleFunc("/index", indexHandler)
+	http.HandleFunc("/about", aboutHandler)
 	http.Handle("/", http.FileServer(http.Dir("./")))
 	if http.ListenAndServe(":80", nil) != nil {
 		panic(http.ListenAndServe(":8080", nil))
