@@ -1,5 +1,6 @@
 package main
 import (
+	"log"
 	"net/http"
 	"html/template"
 )
@@ -14,11 +15,20 @@ type Tenant struct {
 }
 
 func rentRollHandler(w http.ResponseWriter, r *http.Request) {
-	dbName := r.FormValue("email")
-	tenants := dbReadTenants(dbName)
+	log.Print("rentrollhandler")
+	email := r.FormValue("email")
+	tenants := []Tenant{}
+	if email == "" {
+		log.Print("rentroll - NO EMAIL SET")
+		tenants = []Tenant{Tenant{"#1"}}
+	} else {
+		dbName := r.FormValue("email")
+		tenants = dbReadTenants(dbName)
+	}
 	conf := configuration()
 	rentroll := RentRoll{Conf: conf, Tenants: tenants}
 	t, _ := template.ParseFiles("rentroll.html")
+	log.Print("rentrollhandler - execute")
 	t.Execute(w, rentroll)
 }
 

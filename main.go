@@ -31,6 +31,10 @@ func configuration() Configuration {
 	return configuration
 }
 
+func domain(r *http.Request) string {
+	return r.Host
+}
+
 func sendEmailHandler(w http.ResponseWriter, r *http.Request) {
 	configuration := configuration()
 	emailAddress := r.FormValue("email")
@@ -46,21 +50,31 @@ func sendEmailHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
-func aboutHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("about.html")
-	t.Execute(w, configuration())
+type Index struct {
+	Conf Configuration
 }
 
-func domain(r *http.Request) string {
-	return r.Host
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("indexhandler - start")
+	index := Index{Conf: configuration()}
+	t, _ := template.ParseFiles("idx.html")
+	log.Print("indexhandler - execute")
+	t.Execute(w, index)
 }
+
+func aboutHandler(w http.ResponseWriter, r *http.Request) {
+	about := Index{Conf: configuration()}
+	t, _ := template.ParseFiles("about.html")
+	t.Execute(w, about)
+}
+
+
 
 func main() {
 	http.HandleFunc("/submit", submitHandler)
 	http.HandleFunc("/sendemail", sendEmailHandler)
 	http.HandleFunc("/oauth2callback", oauth2callback)
 	http.HandleFunc("/rentroll", rentRollHandler)
-	//http.HandleFunc("/index.html", indexHandler)
 	http.HandleFunc("/index", indexHandler)
 	http.HandleFunc("/about", aboutHandler)
 	http.Handle("/", http.FileServer(http.Dir("./")))

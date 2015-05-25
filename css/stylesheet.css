@@ -1,3 +1,12 @@
+#topbarsigninButton {
+    position: relative;
+    float: right;
+}
+#topbarsignoutButton {
+    position: relative;
+    float: right;
+}
+
 ul.across {
     margin:0;
     padding:0;
@@ -32,12 +41,12 @@ div#bottombar
 }
 
 /* unvisited link */
-a#coinhdg:link {
+a#renroll:link {
     color: #000000;
 }
 
 /* visited link */
-a#coinhdg:visited {
+a#renroll:visited {
     color: #000000;
 }
 

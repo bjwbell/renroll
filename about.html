@@ -1,15 +1,18 @@
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="stylesheet.css" />
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css" />
     <title>About</title>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      ga('create', '{{ .GoogleAnalyticsId }}', 'auto');
+      ga('create', '{{ .Conf.GoogleAnalyticsId }}', 'auto');
       ga('send', 'pageview');
     </script>
+    <script src="https://apis.google.com/js/client:platform.js" async defer></script>    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>    
+    <script src="js/auth.js"></script>
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -19,7 +22,21 @@
         &nbsp;&nbsp;<a href="index.html" id="renroll">Renroll</a>
       </h1>
     </div>
-
+    <br/>
+    <span id="topbarsigninButton">
+        <span id="signinButton">
+            <span class="g-signin"
+                  data-callback="signinCallback"
+                  data-clientid="{{ .Conf.GoogleClientId }}"
+                  data-cookiepolicy="single_host_origin"
+                  data-scope="{{ .Conf.GooglePlusScopes }}">
+            </span>        
+        </span>
+    </span>
+    <span id="topbarsignoutButton">
+        <span id="signoutButton">
+        </span>
+    </span>
   </div>
 </nav>
     <br/>

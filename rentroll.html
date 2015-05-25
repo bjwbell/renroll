@@ -1,16 +1,6 @@
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="stylesheet.css" />
-    <style>
-     #signinButton {
-         position: relative;
-         float: right;
-     }
-     #signoutButton {
-         position: relative;
-         float: right;
-     }
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css" />
     <title>Renroll - Rent Roll</title>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -22,38 +12,7 @@
     </script>
     <script src="https://apis.google.com/js/client:platform.js" async defer></script>    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>    
-    <script>
-        function get(name){
-        if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
-        return decodeURIComponent(name[1]);
-        }
-     function signinCallback(authResult) {
-         if (authResult['status']['signed_in']) {
-             client_id = authResult['client_id']
-             access_token = authResult['access_token']
-             code = authResult['code']
-             document.getElementById('signinButton').setAttribute('style', 'display: none');
-             document.getElementById('signoutButton').innerHTML = "" + get("email") + "";
-             $.ajax({
-                 url: "/oauth2callback",
-                 data: {
-                     client_id: client_id,
-                     access_token: access_token,
-                     code: code,                   
-                 },
-                 success: function( data ) {
-                 }
-             });
-         } else {
-             // Update the app to reflect a signed out user
-             // Possible error values:
-             //   "user_signed_out" - User is signed-out
-             //   "access_denied" - User denied access to your app
-             //   "immediate_failed" - Could not automatically log in the user
-             console.log('Sign-in state: ' + authResult['error']);
-         }
-     }
-    </script>
+    <script src="js/auth.js"></script>
   </head>
   <body>
       <script>
@@ -82,13 +41,15 @@
                   </h1>
               </div>
               <br/>
-              <span id="signinButton">
-                  <span class="g-signin"
-                        data-callback="signinCallback"
-                        data-clientid="{{ .Conf.GoogleClientId }}"
-                        data-cookiepolicy="single_host_origin"
-                        data-scope="{{ .Conf.GooglePlusScopes }}">
-                  </span>        
+              <span id="topbarsigninButton">
+                  <span id="signinButton">
+                      <span class="g-signin"
+                            data-callback="signinCallback"
+                            data-clientid="{{ .Conf.GoogleClientId }}"
+                            data-cookiepolicy="single_host_origin"
+                            data-scope="{{ .Conf.GooglePlusScopes }}">
+                      </span>        
+                  </span>
               </span>
               <!-- <div class="fb-login-button"
                    data-max-rows="1"
@@ -97,7 +58,9 @@
                    data-scope="{{ .Conf.FacebookScopes }}"
                    data-auto-logout-link="true">
               </div> -->
-              <span id="signoutButton">
+              <span id="topbarsignoutButton">
+                  <span id="signoutButton">
+                  </span>
               </span>
           </div>
       </nav>
