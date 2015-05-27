@@ -30,21 +30,25 @@ func dbCreate(name string) {
 func dbInsert(databaseName, tenantName string) {
 	db, err := sql.Open("sqlite3", "./" + databaseName + ".sqlite")
 	if err != nil {
+		log.Print("dbInsert - FATAL ERROR:")
 		log.Fatal(err)
 	}
 	defer db.Close()
 
 	tx, err := db.Begin()
 	if err != nil {
+		log.Print("dbInsert - FATAL ERROR:")
 		log.Fatal(err)
 	}
 	stmt, err := tx.Prepare("insert into tenants(id, name) values(?, ?)")
 	if err != nil {
+		log.Print("dbInsert - FATAL ERROR:")
 		log.Fatal(err)
 	}
 	defer stmt.Close()
 	_, err = stmt.Exec(nil, tenantName)
 	if err != nil {
+		log.Print("dbInsert - FATAL ERROR:")
 		log.Fatal(err)
 	}
 	tx.Commit()
@@ -53,12 +57,14 @@ func dbInsert(databaseName, tenantName string) {
 func dbReadTenants(databaseName string) []Tenant {
 	db, err := sql.Open("sqlite3", "./" + databaseName + ".sqlite")
 	if err != nil {
+		log.Print("dbReadTenants - FATAL ERROR:")
 		log.Fatal(err)
 	}
 	defer db.Close()
 
 	rows, err := db.Query("select id, name from tenants")
 	if err != nil {
+		log.Print("dbReadTenants - FATAL ERROR:")
 		log.Fatal(err)
 	}
 	defer rows.Close()

@@ -7,6 +7,21 @@ import (
 
 type RentRoll struct {
 	Conf Configuration
+}
+
+func rentRollHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("rentrollhandler - begin")
+	conf := configuration()
+	conf.GPlusSigninCallback = "gRentRoll"
+	conf.FacebookSigninCallback = "fbRentRoll"
+	rentroll := RentRoll{Conf: conf}
+	t, _ := template.ParseFiles("rentroll.html", "header-template.html", "fbheader-template.html", "topbar-template.html", "bottombar-template.html")
+	log.Print("rentrollhandler - execute")
+	t.Execute(w, rentroll)
+}
+
+type TenantsTemplate struct {
+	Conf Configuration
 	Tenants []Tenant	
 }
 
@@ -14,21 +29,19 @@ type Tenant struct {
 	Name string
 }
 
-func rentRollHandler(w http.ResponseWriter, r *http.Request) {
-	log.Print("rentrollhandler")
-	email := r.FormValue("email")
+func tenantsHandler(w http.ResponseWriter, r *http.Request) {
 	tenants := []Tenant{}
-	if email == "" {
+	log.Print("tenantshandler - begin")
+	email := r.FormValue("email")
+	if email == "" || email == "dummy@dummy.com" {
 		log.Print("rentroll - NO EMAIL SET")
 		tenants = []Tenant{Tenant{"#1"}}
 	} else {
-		dbName := r.FormValue("email")
+		dbName := email
 		tenants = dbReadTenants(dbName)
 	}
-	conf := configuration()
-	rentroll := RentRoll{Conf: conf, Tenants: tenants}
-	t, _ := template.ParseFiles("rentroll.html")
-	log.Print("rentrollhandler - execute")
-	t.Execute(w, rentroll)
+	t, _ := template.ParseFiles("tenants-template.html")
+	log.Print("tenanthandler - execute")
+	t.ExecuteTemplate(w, "Tenants", TenantsTemplate{Conf: configuration(), Tenants: tenants})
 }
 

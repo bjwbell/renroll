@@ -11,14 +11,10 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"strings"
+	"time"
 )
 
-type AccessToken struct {
- 	Token  string
- 	Expiry int64
-}
-
-func googleOAuth2Config(domain string) *oauth2.Config {
+func googleOAuth2Config() *oauth2.Config {
 	appConf := configuration()
 	conf := &oauth2.Config{
  		ClientID:     appConf.GoogleClientId,
@@ -56,17 +52,38 @@ func oauth2callback(w http.ResponseWriter, r *http.Request) {
 	log.Print("oauth2callback - code: " + code)
 	
 	newAccount := r.FormValue("new_account")
- 	conf := googleOAuth2Config(domain(r))
-	tok, err := conf.Exchange(oauth2.NoContext, code)
-	if err != nil {
-		log.Fatal(err)
+	//email := getGPlusEmail(code)
+	token := getGPlusToken(r)
+	email := getGPlusEmail(token)
+	if newAccount == "true" {
+		log.Print("oauth2callback - NEW ACCOUNT")
+		interestedUser(email, "oauth2callback")
+		dbCreate(email)
+		dbInsert(email, "#1")
 	}
-	client := conf.Client(oauth2.NoContext, tok)
+	w.Write([]byte(email))
+}
+
+func getGPlusToken(r *http.Request) oauth2.Token {
+        accessToken := r.FormValue("access_token")
+        if accessToken == "" {
+		log.Fatal("getGPlusToken - NO ACCESS TOKEN")
+	}
+	return oauth2.Token{AccessToken: accessToken,
+		TokenType: "Bearer",
+		RefreshToken: "",
+		Expiry: time.Now().Add(time.Hour)}
+}
+
+func getGPlusEmail(tok oauth2.Token) string {
+ 	conf := googleOAuth2Config()
+	client := conf.Client(oauth2.NoContext, &tok)
  	response, err := client.Get("https://www.googleapis.com/plus/v1/people/me?fields=emails")
  	// handle err. You need to change this into something more robust
  	// such as redirect back to home page with error message
  	if err != nil {
- 		w.Write([]byte(err.Error()))
+		log.Print("getGPlusEmail - COULDN'T GET PROFILE INFO WITH TOK, ERR:")
+		log.Fatal(err)
  	}
  	str := readHttpBody(response)
 	type Email struct {
@@ -78,29 +95,46 @@ func oauth2callback(w http.ResponseWriter, r *http.Request) {
 		Emails []Email
 		Id string
 	}
-	log.Print("oauth2callback - response: " + str)
+	log.Print("getemail - response: " + str)
 	dec := json.NewDecoder(strings.NewReader(str))
 	var m OAuth2Response
 	if err := dec.Decode(&m); err != nil {
+		log.Print("getGPlusEmail - COULDN'T DECODE OAUTH2 RESPONSE, ERR:")
 		log.Fatal(err)
 	}
 	for _, v := range m.Emails {
-		log.Print("oauth2callback - email (value, type): " + v.Value + ", " + v.Type)
+		log.Print("getemail - email (value, type): " + v.Value + ", " + v.Type)
 	}
 	
 	email := "dummy@dummy.com"
 	if len(m.Emails) != 1 {
-		log.Print("oauth2callback - NO VALID EMAIL OR TOO MANY")
+		log.Print("getemail - NO VALID EMAIL OR TOO MANY")
 		
 	} else {	
 		email = m.Emails[0].Value
 	}
-	if newAccount == "true" {
-		log.Print("oauth2callback - NEW ACCOUNT")
-		dbCreate(email)
-		dbInsert(email, "#1")
-	}
+	return email
+}
+
+func getGPlusEmailHandler(w http.ResponseWriter, r *http.Request) {
+	email := getGPlusEmail(getGPlusToken(r))
 	w.Write([]byte(email))
 }
 
 
+func createAccountHandler(w http.ResponseWriter, r *http.Request) {
+	email := r.FormValue("email")
+	loginMethod := r.FormValue("loginmethod")
+	if email == "" {
+		log.Print("createAccountHandler - NO EMAIL")
+		success := "false"
+		w.Write([]byte(success))
+		return
+	}
+	log.Printf("createAccountHandler - NEW ACCOUNT: %s", email)
+	interestedUser(email, loginMethod)
+	dbCreate(email)
+	dbInsert(email, "#1")
+	success := "true"
+	w.Write([]byte(success))
+}
