@@ -7,6 +7,20 @@
   <body>
       {{template "FBHeader" . }}
       {{template "Topbar" . }}
+      <span id="notloggedin-callback"
+            callback="rentRollNotLoggedIn">            
+      </span>
+      <script>
+       function gSigninForm(resp) {
+           window.location.href = '/rentroll';
+       }
+       
+       function fbSigninForm() {
+           window.location.href = '/rentroll';
+       }
+      </script>
+      <span id="signinform">
+      </span>
       <br/>
       <br/>
       <br/>

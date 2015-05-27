@@ -54,7 +54,19 @@ func dbInsert(databaseName, tenantName string) {
 	tx.Commit()
 }
 
+// exists returns whether the given file or directory exists or not
+func exists(path string) (bool, error) {
+    _, err := os.Stat(path)
+    if err == nil { return true, nil }
+    if os.IsNotExist(err) { return false, nil }
+    return false, err
+}
+
 func dbReadTenants(databaseName string) []Tenant {
+	ex, _ := exists("./" + databaseName + ".sqlite")
+	if ex == false {
+		dbCreate(databaseName);
+	}
 	db, err := sql.Open("sqlite3", "./" + databaseName + ".sqlite")
 	if err != nil {
 		log.Print("dbReadTenants - FATAL ERROR:")

@@ -73,6 +73,20 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, about)
 }
 
+func contactHandler(w http.ResponseWriter, r *http.Request) {
+	about := Index{Conf: configuration()}
+	t, _ := template.ParseFiles("contact.html", "header-template.html", "fbheader-template.html", "topbar-template.html", "bottombar-template.html")
+	t.Execute(w, about)
+}
+
+func settingsHandler(w http.ResponseWriter, r *http.Request) {
+	conf := Index{Conf: configuration()}
+	conf.Conf.GPlusSigninCallback = "gSettings"
+	conf.Conf.FacebookSigninCallback = "fbSettings"
+	t, _ := template.ParseFiles("settings.html", "header-template.html", "fbheader-template.html", "topbar-template.html", "bottombar-template.html")
+	t.Execute(w, conf)
+}
+
 
 
 func main() {
@@ -81,10 +95,13 @@ func main() {
 	http.HandleFunc("/oauth2callback", oauth2callback)
 	http.HandleFunc("/index", indexHandler)
 	http.HandleFunc("/about", aboutHandler)
+	http.HandleFunc("/contact", contactHandler)
 	http.HandleFunc("/auth/getemail", getGPlusEmailHandler)
 	http.HandleFunc("/tenants", tenantsHandler)
 	http.HandleFunc("/rentroll", rentRollHandler)
 	http.HandleFunc("/createaccount", createAccountHandler)
+	http.HandleFunc("/signinform", signinFormHandler)
+	http.HandleFunc("/settings", settingsHandler)
 	http.Handle("/", http.FileServer(http.Dir("./")))
 	if http.ListenAndServe(":80", nil) != nil {
 		panic(http.ListenAndServe(":8080", nil))

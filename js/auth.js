@@ -11,6 +11,16 @@ function gGetEmail(resp){
     return resp.result.emails[0].value;
 }
 
+function gGetName(resp){
+    if (resp.result.emails.length == 0) {
+        console.log("gRentRollCallback - error no email!");
+        return ''
+    }
+    return resp.result.displayName;    
+}
+
+var gSigninFailed = 0;
+
 function gSignin(authResult) {
     if (authResult['status']['signed_in']) {
         client_id = authResult['client_id'];
@@ -24,6 +34,7 @@ function gSignin(authResult) {
         if (fbSigninButton !== null) {
             fbSigninButton.setAttribute('style', 'display: none');
         }
+        document.getElementById('gsettings').setAttribute('style', 'display: inline');
         gapi.client.load('plus', 'v1').then(function() {
             var request = gapi.client.plus.people.get({
                 'userId': 'me'
@@ -51,8 +62,11 @@ function gSignin(authResult) {
         //   "user_signed_out" - User is signed-out
         //   "access_denied" - User denied access to your app
         //   "immediate_failed" - Could not automatically log in the user
-        console.log('Sign-in state: ' + authResult['error']);
-        startFBLogin();
+        if (gSigninFailed == 0){
+            console.log('Sign-in state: ' + authResult['error']);
+            startFBLogin();
+            gSigninFailed += 1;
+        }
     }
 }
 
@@ -64,26 +78,31 @@ function fbLogin(response){
     if (response.status === 'connected') {
         // Logged into your app and Facebook.
         document.getElementById('gSigninButton').setAttribute('style', 'display: none');
+        document.getElementById('fbsettings').setAttribute('style', 'display: inline');
         FB.api('/me', function(response) {
-            document.getElementById('fbEmail').innerHTML = response.email;
+            document.getElementById('fbEmail').innerHTML = response.email;            
         });
         executeCallback('fb-callback', response);
     } else if (response.status === 'not_authorized') {
         // The person is logged into Facebook, but not your app.
         document.getElementById('fbstatus').innerHTML = 'Please log into this app.';
+        executeCallback('notloggedin-callback', '');        
     } else {
         // The person is not logged into Facebook
+        executeCallback('notloggedin-callback', '');
+        
     }
 }
 
 function executeCallback(name, response) {
     var callback = document.getElementById(name);
     if (callback === null) {
-        console.log('executeCallback - ERROR NO CALLBACK');
+        console.log('executeCallback - ERROR NO CALLBACK: ' + name);
+        return;
     }
     var callbackAttr = callback.attributes['callback'];
     if (callbackAttr === null) {
-        console.log('executeCallback - ERROR NO CALLBACK');
+        console.log('executeCallback - ERROR NO CALLBACK: ' + name);
         return;
     } 
     var callbackName = callbackAttr.value;
@@ -103,7 +122,7 @@ function createAccount(email, loginMethod) {
     $.ajax({url: '/createaccount',
             data: { 'email': email, 'loginmethod': loginMethod },
             success: function( data ) {
-                window.location.href = '/rentroll'
+                window.location.href = '/rentroll';
             }
         });
 }
@@ -115,4 +134,22 @@ function fbSignup() {
     FB.api('/me', function(response) {
         createAccount(response.email, 'Facebook');
     });
+}
+
+function gSettings(resp){
+    setSettings(gGetName(resp), gGetEmail(resp));
+}
+
+function fbSettings(){
+    FB.api('/me', function(response) {
+        setSettings(response.name, response.email);
+    });
+
+}
+
+function setSettings(name, email) {
+    var nameEle = document.getElementById("name");
+    var emailEle = document.getElementById("email");
+    nameEle.innerHTML = name;
+    emailEle.innerHTML = email;
 }

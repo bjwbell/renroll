@@ -6,7 +6,8 @@
                 &nbsp;&nbsp;<a href="index" id="renroll">Renroll</a>
             </h1>
         </div>
-        <br/>
+        <br/>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/rentroll" class="rentroll">Tenants/Rent Roll</a>
         <span id="topbarsigninButton">
             <span id="g-callback"
                   callback="{{if .Conf.GPlusSigninCallback}}{{.Conf.GPlusSigninCallback}}{{end}}">            
@@ -35,11 +36,14 @@
                       data-auto-logout-link="true">
                 </span>
             </span>
-        </span>
-        <span id="topbarsignoutButton">
-            <span id="gSignoutButton">
+            <span id="topbarsignoutButton">
+                <span id="gSignoutButton">
+                </span>
+                <a href="/settings" class="settings" id="gsettings">Settings</a>
             </span>
+            <a href="/settings" class="settings" id="fbsettings">Settings</a>
         </span>
+        
     </div>
 </nav>
 {{end}}

@@ -7,7 +7,7 @@ function populateRentRoll(email) {
         url: '/tenants',
         data: { 'email': email },
         success: function( tenants ) {
-            document.getElementById('tenants').innerHTML = tenants
+            document.getElementById('tenants').innerHTML = tenants;
         }
     });
 }
@@ -22,3 +22,18 @@ function fbRentRoll() {
     });
 }
  
+function rentRollNotLoggedIn() {
+    window.location.href = "/submit";
+    /*var signinForm = document.getElementById("signinform");
+    if (signinForm == null) {
+        console.log("rentRollNotLoggedIn - ERROR NO SIGNIN FORM ELEMENT");
+        return;
+    }
+    $.ajax({
+        url: '/signinform',
+        success: function( form ) {
+            signinForm.innerHTML = form;
+        }
+    });*/
+    
+}

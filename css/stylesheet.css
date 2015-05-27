@@ -6,6 +6,9 @@
     position: relative;
     float: right;
 }
+#settings {
+    float: right;
+}
 
 ul.across {
     margin:0;
@@ -39,7 +42,6 @@ div#bottombar
         color: #000000;
     }
 }
-
 /* unvisited link */
 a#renroll:link {
     color: #000000;
@@ -48,6 +50,45 @@ a#renroll:link {
 /* visited link */
 a#renroll:visited {
     color: #000000;
+}
+
+
+/* unvisited link */
+a.about:link {
+    color: #000000;
+    font-size: large;
+}
+
+/* visited link */
+a.about:visited {
+    color: #000000;
+    font-size: large;
+}
+
+/* unvisited link */
+a.settings:link {
+    color: #000000;
+    font-size: small;
+    display: none;
+}
+
+/* visited link */
+a.settings:visited {
+    color: #000000;
+    font-size: small;
+    display: none;
+}
+
+/* visited link */
+a.rentroll:visited {
+    color: Lavender;
+    font-size: x-large;
+}
+
+/* unvisited link */
+a.rentroll:link {
+    color: Lavender;
+    font-size: x-large;
 }
 
 a#email-link:link {

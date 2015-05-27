@@ -12,6 +12,7 @@ import (
 	"golang.org/x/oauth2/google"
 	"strings"
 	"time"
+	"html/template"
 )
 
 func googleOAuth2Config() *oauth2.Config {
@@ -137,4 +138,16 @@ func createAccountHandler(w http.ResponseWriter, r *http.Request) {
 	dbInsert(email, "#1")
 	success := "true"
 	w.Write([]byte(success))
+}
+
+
+type SigninForm struct {
+	Conf Configuration
+}
+
+func signinFormHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("signinform - begin")
+	t, _ := template.ParseFiles("signinform-template.html")
+	log.Print("signinform - execute")
+	t.Execute(w, SigninForm{Conf: configuration()})
 }

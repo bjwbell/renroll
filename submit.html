@@ -21,7 +21,7 @@
       <br/>
       <p>
           <br/>
-          <h2>Sign Up With:</h2>
+          <h2>Sign In With:</h2>
           <span id="gSigninButton">
               <span id="g-callback"
                     callback="gSignup">            
@@ -36,13 +36,15 @@
               </span>
           </span>
           <br/>
-          <span class="fb-login-button"
-                data-max-rows="1"
-                data-size="xlarge"
-                data-show-faces="false"
-                data-scope="{{ .Conf.FacebookScopes }}"
-                onlogin="fbSignup"
-                data-auto-logout-link="true">
+          <span id="fbSigninButton">
+              <span class="fb-login-button"
+                    data-max-rows="1"
+                    data-size="xlarge"
+                    data-show-faces="false"
+                    data-scope="{{ .Conf.FacebookScopes }}"
+                    onlogin="fbSignup"
+                    data-auto-logout-link="true">
+              </span>
           </span>
           <br/>
           
