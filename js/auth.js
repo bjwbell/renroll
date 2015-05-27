@@ -34,7 +34,10 @@ function gSignin(authResult) {
         if (fbSigninButton !== null) {
             fbSigninButton.setAttribute('style', 'display: none');
         }
-        document.getElementById('gsettings').setAttribute('style', 'display: inline');
+        var gsettings = document.getElementById('gsettings');
+        if (gsettings !== null) {
+            gsettings.setAttribute('style', 'display: inline');
+        }
         gapi.client.load('plus', 'v1').then(function() {
             var request = gapi.client.plus.people.get({
                 'userId': 'me'
@@ -78,7 +81,10 @@ function fbLogin(response){
     if (response.status === 'connected') {
         // Logged into your app and Facebook.
         document.getElementById('gSigninButton').setAttribute('style', 'display: none');
-        document.getElementById('fbsettings').setAttribute('style', 'display: inline');
+        var fbsettings = document.getElementById('fbsettings');
+        if (fbsettings !== null) { 
+            fbsettings.setAttribute('style', 'display: inline');
+        }
         FB.api('/me', function(response) {
             document.getElementById('fbEmail').innerHTML = response.email;            
         });
