@@ -1,3 +1,8 @@
+/*jslint browser: true*/
+/*globals $, FB, gapi, fbLogin, setSettings, gGetEmail*/
+
+"use strict";
+
 function populateRentRoll(email) {
     if (email === '') {
         console.log("populateRentRoll - empty email!");
@@ -6,7 +11,7 @@ function populateRentRoll(email) {
     $.ajax({
         url: '/tenants',
         data: { 'email': email },
-        success: function( tenants ) {
+        success: function (tenants) {
             document.getElementById('tenants').innerHTML = tenants;
         }
     });
@@ -17,11 +22,11 @@ function gRentRoll(resp) {
 }
 
 function fbRentRoll() {
-    FB.api('/me', function(response) {
-            populateRentRoll(response.email);
+    FB.api('/me', function (response) {
+        populateRentRoll(response.email);
     });
 }
- 
+
 function rentRollNotLoggedIn() {
     window.location.href = "/submit";
     /*var signinForm = document.getElementById("signinform");
@@ -35,5 +40,4 @@ function rentRollNotLoggedIn() {
             signinForm.innerHTML = form;
         }
     });*/
-    
 }
