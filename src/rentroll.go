@@ -15,7 +15,11 @@ func rentRollHandler(w http.ResponseWriter, r *http.Request) {
 	conf.GPlusSigninCallback = "gRentRoll"
 	conf.FacebookSigninCallback = "fbRentRoll"
 	rentroll := RentRoll{Conf: conf}
-	t, _ := template.ParseFiles("rentroll.html", "templates/header-template.html", "templates/fbheader-template.html", "templates/topbar-template.html", "templates/bottombar-template.html")
+	t, _ := template.ParseFiles(
+		"rentroll.html",
+		"templates/header-template.html",
+		"templates/topbar-template.html",
+		"templates/bottombar-template.html")
 	log.Print("rentrollhandler - execute")
 	t.Execute(w, rentroll)
 }

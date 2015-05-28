@@ -1,5 +1,5 @@
 /*jslint browser: true*/
-/*globals $, FB, gapi, fbLogin, setSettings*/
+/*globals FacebookAppId, $, FB, gapi, fbLogin, setSettings*/
 "use strict";
 function get(name) {
     var name2 = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search);
@@ -40,7 +40,6 @@ function executeCallback(name, response) {
     }
     callbackName = callbackAttr.value;
     if (callbackName === null || callbackName === '') {
-        console.log('executeCallback - empty callback name');
         return;
     }
     // call the callback.
@@ -50,7 +49,7 @@ function executeCallback(name, response) {
 function startFBLogin() {
     window.fbAsyncInit = function () {
         FB.init({
-            appId      : "{{ .Conf.FacebookAppId }}",
+            appId      : FacebookAppId,
             xfbml      : true,
             version    : 'v2.3'
         });
