@@ -1,20 +1,24 @@
 function get(name){
-    if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
-        return decodeURIComponent(name[1]);
+    var name2=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search);
+    if (name2) {
+        return decodeURIComponent(name2[1]);
+    } else {
+        return "";
+    }
 }
 
 function gGetEmail(resp){
-    if (resp.result.emails.length == 0) {
+    if (resp.result.emails.length === 0) {
         console.log("gRentRollCallback - error no email!");
-        return ''
+        return '';
     }
     return resp.result.emails[0].value;
 }
 
 function gGetName(resp){
-    if (resp.result.emails.length == 0) {
+    if (resp.result.emails.length === 0) {
         console.log("gRentRollCallback - error no email!");
-        return ''
+        return '';
     }
     return resp.result.displayName;    
 }
@@ -22,10 +26,10 @@ function gGetName(resp){
 var gSigninFailed = 0;
 
 function gSignin(authResult) {
-    if (authResult['status']['signed_in']) {
-        client_id = authResult['client_id'];
-        access_token = authResult['access_token'];
-        code = authResult['code'];
+    if (authResult.status.signed_in) {
+        client_id = authResult.client_id;
+        access_token = authResult.access_token;
+        code = authResult.code;
         gSigninButton = document.getElementById('gSigninButton');
         if (gSigninButton !== null) {
             gSigninButton.setAttribute('style', 'display: none');
@@ -44,7 +48,7 @@ function gSignin(authResult) {
             });
             request.then(function(resp) {
                 email = "";
-                if (resp.result.emails.length == 0) {
+                if (resp.result.emails.length === 0) {
                     console.log("Error no email!");
                     email = "dummy@dummy.com";
                 } else {
@@ -65,8 +69,8 @@ function gSignin(authResult) {
         //   "user_signed_out" - User is signed-out
         //   "access_denied" - User denied access to your app
         //   "immediate_failed" - Could not automatically log in the user
-        if (gSigninFailed == 0){
-            console.log('Sign-in state: ' + authResult['error']);
+        if (gSigninFailed === 0){
+            console.log('Sign-in state: ' + authResult.error);
             startFBLogin();
             gSigninFailed += 1;
         }
@@ -96,7 +100,6 @@ function fbLogin(response){
     } else {
         // The person is not logged into Facebook
         executeCallback('notloggedin-callback', '');
-        
     }
 }
 
@@ -106,13 +109,13 @@ function executeCallback(name, response) {
         console.log('executeCallback - ERROR NO CALLBACK: ' + name);
         return;
     }
-    var callbackAttr = callback.attributes['callback'];
+    var callbackAttr = callback.attributes.callback;
     if (callbackAttr === null) {
         console.log('executeCallback - ERROR NO CALLBACK: ' + name);
         return;
     } 
     var callbackName = callbackAttr.value;
-    if (callbackName == null || callbackName === '') {
+    if (callbackName === null || callbackName === '') {
         console.log('executeCallback - empty callback name');
         return;
     }

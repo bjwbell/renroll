@@ -15,7 +15,7 @@ func rentRollHandler(w http.ResponseWriter, r *http.Request) {
 	conf.GPlusSigninCallback = "gRentRoll"
 	conf.FacebookSigninCallback = "fbRentRoll"
 	rentroll := RentRoll{Conf: conf}
-	t, _ := template.ParseFiles("rentroll.html", "header-template.html", "fbheader-template.html", "topbar-template.html", "bottombar-template.html")
+	t, _ := template.ParseFiles("rentroll.html", "templates/header-template.html", "templates/fbheader-template.html", "templates/topbar-template.html", "templates/bottombar-template.html")
 	log.Print("rentrollhandler - execute")
 	t.Execute(w, rentroll)
 }
@@ -40,7 +40,7 @@ func tenantsHandler(w http.ResponseWriter, r *http.Request) {
 		dbName := email
 		tenants = dbReadTenants(dbName)
 	}
-	t, _ := template.ParseFiles("tenants-template.html")
+	t, _ := template.ParseFiles("templates/tenants-template.html")
 	log.Print("tenanthandler - execute")
 	t.ExecuteTemplate(w, "Tenants", TenantsTemplate{Conf: configuration(), Tenants: tenants})
 }

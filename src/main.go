@@ -62,20 +62,20 @@ type Index struct {
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("indexhandler - start")
 	index := Index{Conf: configuration()}
-	t, _ := template.ParseFiles("idx.html", "header-template.html", "fbheader-template.html", "topbar-template.html", "bottombar-template.html")
+	t, _ := template.ParseFiles("idx.html", "templates/header-template.html", "templates/fbheader-template.html", "templates/topbar-template.html", "templates/bottombar-template.html")
 	log.Print("indexhandler - execute")
 	t.Execute(w, index)
 }
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	about := Index{Conf: configuration()}
-	t, _ := template.ParseFiles("about.html", "header-template.html", "fbheader-template.html", "topbar-template.html", "bottombar-template.html")
+	t, _ := template.ParseFiles("about.html", "templates/header-template.html", "templates/fbheader-template.html", "templates/topbar-template.html", "templates/bottombar-template.html")
 	t.Execute(w, about)
 }
 
 func contactHandler(w http.ResponseWriter, r *http.Request) {
 	about := Index{Conf: configuration()}
-	t, _ := template.ParseFiles("contact.html", "header-template.html", "fbheader-template.html", "topbar-template.html", "bottombar-template.html")
+	t, _ := template.ParseFiles("contact.html", "templates/header-template.html", "templates/fbheader-template.html", "templates/topbar-template.html", "templates/bottombar-template.html")
 	t.Execute(w, about)
 }
 
@@ -83,7 +83,7 @@ func settingsHandler(w http.ResponseWriter, r *http.Request) {
 	conf := Index{Conf: configuration()}
 	conf.Conf.GPlusSigninCallback = "gSettings"
 	conf.Conf.FacebookSigninCallback = "fbSettings"
-	t, _ := template.ParseFiles("settings.html", "header-template.html", "fbheader-template.html", "topbar-template.html", "bottombar-template.html")
+	t, _ := template.ParseFiles("settings.html", "templates/header-template.html", "templates/fbheader-template.html", "templates/topbar-template.html", "templates/bottombar-template.html")
 	t.Execute(w, conf)
 }
 
