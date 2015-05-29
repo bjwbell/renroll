@@ -1,5 +1,5 @@
 /*jslint browser: true*/
-/*globals FacebookAppId, $, FB, gapi, fbLogin, setSettings*/
+/*globals $, FB, gapi, StackTrace, FacebookAppId, fbLogin, setSettings*/
 "use strict";
 function get(name) {
     var name2 = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search);
@@ -7,6 +7,33 @@ function get(name) {
         return decodeURIComponent(name2[1]);
     }
     return "";
+}
+
+function sendLogError(msg) {
+    $.ajax({url: '/logerror',
+            data: { 'location': window.location.href, 'error': msg },
+           });
+}
+
+function logError(error) {
+    var message =
+        "Error: " + error + "\r\n\r\n" +
+        "Stack: ",
+        callback,
+        errback;
+
+    callback = function (stackframes) {
+        var stringifiedStack = stackframes.map(function (sf) {
+            return sf.toString();
+        }).join('\n');
+        message = message + stringifiedStack;
+        sendLogError(message);
+    };
+    errback = function (err) {
+        message = message + err.message;
+        sendLogError(message);
+    };
+    StackTrace.get().then(callback, errback);
 }
 
 function gGetEmail(resp) {
@@ -20,30 +47,47 @@ function gGetEmail(resp) {
 function gGetName(resp) {
     if (resp.result.emails.length === 0) {
         console.log("gRentRollCallback - error no email!");
+        logError("gRentRollCallback - error no email!");
         return '';
     }
     return resp.result.displayName;
 }
 
-function executeCallback(name, response) {
+function executeCallback(name, response, logerror) {
     var callback = document.getElementById(name),
         callbackAttr = null,
-        callbackName = null;
+        callbackName = null,
+        errorMsg = '';
     if (callback === null) {
         console.log('executeCallback - ERROR NO CALLBACK: ' + name);
+        if (logerror === true) {
+            logError('executeCallback - ERROR NO CALLBACK: ' + name);
+        }
         return;
     }
     callbackAttr = callback.attributes.callback;
-    if (callbackAttr === null) {
+    if (callbackAttr === undefined) {
         console.log('executeCallback - ERROR NO CALLBACK: ' + name);
+        if (logerror === true) {
+            logError('executeCallback - ERROR NO CALLBACK: ' + name);
+        }
         return;
     }
     callbackName = callbackAttr.value;
-    if (callbackName === null || callbackName === '') {
+    if (callbackName === undefined || callbackName === null || callbackName === '') {
         return;
     }
     // call the callback.
-    window[callbackName](response);
+    if (window[callbackName] === undefined || window[callbackName] === null) {
+        errorMsg =
+            'executeCallback - ERROR CALLBACK DOESNT EXIST,' +
+            'id name: ' + name + ', ' +
+            'callback name: ' + callbackName;
+        console.log(errorMsg);
+        logError(errorMsg);
+        return;
+    }
+    return window[callbackName](response);
 }
 
 function startFBLogin() {
@@ -102,9 +146,10 @@ function gSignin(authResult) {
                 if (gSignoutButton !== null) {
                     gSignoutButton.innerHTML = email;
                 }
-                executeCallback('g-callback', resp);
+                executeCallback('g-callback', resp, false);
             }, function (reason) {
-                console.log('Error: ' + reason.result.error.message);
+                console.log('gSignin - Error: ' + reason.result.error.message);
+                logError('Error: ' + reason.result.error.message);
             });
         });
     } else {
@@ -136,14 +181,14 @@ function fbLogin(response) {
         FB.api('/me', function (response) {
             document.getElementById('fbEmail').innerHTML = response.email;
         });
-        executeCallback('fb-callback', response);
+        executeCallback('fb-callback', response, false);
     } else if (response.status === 'not_authorized') {
         // The person is logged into Facebook, but not your app.
         document.getElementById('fbstatus').innerHTML = 'Please log into this app.';
-        executeCallback('notloggedin-callback', '');
+        executeCallback('notloggedin-callback', '', false);
     } else {
         // The person is not logged into Facebook
-        executeCallback('notloggedin-callback', '');
+        executeCallback('notloggedin-callback', '', false);
     }
 }
 

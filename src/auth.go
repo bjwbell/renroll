@@ -100,7 +100,7 @@ func getGPlusEmail(tok oauth2.Token) string {
 	dec := json.NewDecoder(strings.NewReader(str))
 	var m OAuth2Response
 	if err := dec.Decode(&m); err != nil {
-		log.Print("getGPlusEmail - COULDN'T DECODE OAUTH2 RESPONSE, ERR:")
+		logError(fmt.Sprintf("COULDN'T DECODE OAUTH2 RESPONSE, ERR: %v", err))
 		log.Fatal(err)
 	}
 	for _, v := range m.Emails {
@@ -127,7 +127,7 @@ func createAccountHandler(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	loginMethod := r.FormValue("loginmethod")
 	if email == "" {
-		log.Print("createAccountHandler - NO EMAIL")
+		logError("CREATE ACCOUNT HANDLER - NO EMAIL")
 		success := "false"
 		w.Write([]byte(success))
 		return

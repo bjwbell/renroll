@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 	"net/smtp"
+	"fmt"
+	"runtime"
 )
 
 type Configuration struct {
@@ -35,24 +37,42 @@ func configuration() Configuration {
 func domain(r *http.Request) string {
 	return r.Host
 }
-func interestedUser(emailAddress string, loginMethod string) {
+
+func sendAdminEmail(emailAddress string, subject string, body string) {
 	configuration := configuration()
-	body := "To: " + configuration.GmailAddress + "\r\nSubject: Renroll Notification Clicked!" + 
-		"\r\n\r\nInterested user: " + emailAddress + ".\r\nLogin method: " + loginMethod + "."
+	content :=
+		"To: " + configuration.GmailAddress + "\r\n" +
+		"Subject: " + subject + "\r\n\r\n" + 
+		body
 	auth := smtp.PlainAuth("", configuration.GmailAddress, configuration.GmailPassword, "smtp.gmail.com")
 	err := smtp.SendMail("smtp.gmail.com:587", auth, emailAddress,
-		[]string{configuration.GmailAddress},[]byte(body))
+		[]string{configuration.GmailAddress},[]byte(content))
 	if err != nil {
 		log.Print("sendEmail - ERROR:")
 		log.Fatal(err)
-	}   	
+	}
 }
 
-func sendEmailHandler(w http.ResponseWriter, r *http.Request) {
+func interestedUser(emailAddress string, loginMethod string) {
+	subject := "Renroll Notification Clicked (" + emailAddress + ")"
+	body := "Interested user: " + emailAddress + ".\r\n" +
+		"Login method: " + loginMethod + "."
+	sendAdminEmail(emailAddress, subject, body)
+}
 
-	emailAddress := r.FormValue("email")
-	interestedUser(emailAddress, "sendEmailHandler")
-	http.Redirect(w, r, "/", http.StatusFound)
+func logErrorHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("logerrorhandler - begin")
+	error := r.FormValue("error")
+	sendAdminEmail(configuration().GmailAddress, "Renroll JS Error", error)
+}
+
+func logError(error string) {
+	buf := make([]byte, 1<<16)
+	runtime.Stack(buf, true)
+	trace := fmt.Sprintf("%s", buf)
+	msg := "Go Error\r\nError Message: " + error + "\r\n\r\nStack Trace:\r\n" + trace
+	log.Print(error)
+	sendAdminEmail(configuration().GmailAddress, "Renroll Go Error", msg)
 }
 
 type Index struct {
@@ -99,11 +119,9 @@ func settingsHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, conf)
 }
 
-
-
 func main() {
 	http.HandleFunc("/submit", submitHandler)
-	http.HandleFunc("/sendemail", sendEmailHandler)
+	http.HandleFunc("/logerror", logErrorHandler)
 	http.HandleFunc("/oauth2callback", oauth2callback)
 	http.HandleFunc("/index", indexHandler)
 	http.HandleFunc("/about", aboutHandler)
