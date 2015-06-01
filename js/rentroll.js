@@ -42,5 +42,7 @@ function rentRollNotLoggedIn() {
     });*/
 }
 
-function rentRollTemplateNotLoggedIn() {
-}
+function rentRollTemplateNotLoggedIn() { }}
+function gRentRollTemplate(resp) { }
+function fbRentRollTemplate() { }
+
