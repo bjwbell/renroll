@@ -1,0 +1,37 @@
+.as-of-date {
+    border:1px dashed black;
+    padding:4px;
+    border-radius: 3px;    
+}
+
+.rentroll-table {
+    border:1px dashed black;
+    box-shadow: 2px 2px 2px #888888;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+
+.tmplt-th {
+    border:0px dotted black;
+}
+
+.th-tenant {
+    border:0px dotted black;
+    width:228px;
+}
+
+.th-address {
+    border:0px dotted black;
+    width:300px;
+}
+
+.th-comments {
+    border:0px dotted black;
+    width:200px;
+}
+
+
+.tmplt-td {
+    border:1px dotted black;
+}

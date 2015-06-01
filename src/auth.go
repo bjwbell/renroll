@@ -147,7 +147,7 @@ type SigninForm struct {
 
 func signinFormHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("signinform - begin")
-	t, _ := template.ParseFiles("templates/signinform-template.html")
+	t, _ := template.ParseFiles("templates/signinform.html")
 	log.Print("signinform - execute")
 	t.Execute(w, SigninForm{Conf: configuration()})
 }

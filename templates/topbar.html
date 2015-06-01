@@ -1,4 +1,5 @@
 {{define "Topbar"}}
+<link rel="stylesheet" type="text/css" href="css/topbar.css" />
 <nav class="navbar navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -6,8 +7,11 @@
                 &nbsp;&nbsp;<a href="index" class="renroll-link">Renroll</a>
             </h1>
         </div>
-        <br/>&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="/rentroll" class="rentroll">Tenants/Rent Roll</a>
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/rentroll" class="topbar-item">Tenants/Rent Roll</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/rentrolltemplate" class="topbar-item">Rent Roll Template</a>        
         <span id="topbarsigninButton">
             <span id="g-callback"
                   callback="{{if .Conf.GPlusSigninCallback}}{{.Conf.GPlusSigninCallback}}{{end}}">            
@@ -43,7 +47,6 @@
             </span>
             <a href="/settings" class="settings" id="fbsettings">Settings</a>
         </span>
-        
     </div>
 </nav>
 {{end}}

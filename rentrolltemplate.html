@@ -1,0 +1,158 @@
+<html>
+  <head>
+    <title>Renroll - Rent Roll</title>
+    {{template "Header" .}}
+    <script src="js/rentroll.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/rentroll-template.css" />
+  </head>
+  <body>
+      {{template "Topbar" . }}
+      <div class="body-content">
+          <span id="notloggedin-callback"
+                callback="rentRollTemplateNotLoggedIn">            
+          </span>
+          <h1>Rent Roll</h1>
+          <span class="as-of-date">
+              <b>As of Date:</b>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+          <br>
+          <br>
+          <div id="tenants">
+              <table class="rentroll-table">
+                  <tr>
+                      <th class="th-tenant">Tenant</th>
+                      <th class="th-address">Address</th>
+                      <th class="tmplt-th">Sq. Feet</th>
+                      <th class="tmplt-th">Lease Start<br>(Date)</th>
+                      <th class="tmplt-th">Lease End<br>(Date)</th>
+                      <th class="tmplt-th">Base Rent</th>
+                      <th class="tmplt-th">Electricity</th>
+                      <th class="tmplt-th">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gas&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                      <th class="tmplt-th">&nbsp;&nbsp;&nbsp;Water&nbsp;&nbsp;&nbsp;</th>
+                      <th class="tmplt-th">Sewage/Trash/<br>Recyle</th>
+                      <th class="tmplt-th">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                      <th class="th-comments">Comments</th>
+                  </tr>
+                  <tr>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">$0.00</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                  </tr>
+                  <tr>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">$0.00</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                  </tr>
+                  <tr>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">$0.00</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                  </tr>
+                  <tr>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">$0.00</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                  </tr>
+                  <tr>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">$0.00</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                  </tr>
+                  <tr>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">$0.00</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                  </tr>
+                  <tr>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                      <td class="tmplt-td">$0.00</td>
+                      <td class="tmplt-td">&nbsp;</td>
+                  </tr>
+                  <tr>
+                      <td style="border:0px dotted black;">&nbsp;</td>
+                      <td style="border:0px dotted black;text-align:right;">Total Sq. Feet</td>
+                      <td class="tmplt-td">0</td>
+                      <td style="border:0px dotted black;">&nbsp;</td>
+                      <td style="border:0px dotted black;text-align:right;">Total(s)</td>
+                      <td class="tmplt-td">$0.00</td>
+                      <td class="tmplt-td">$0.00</td>
+                      <td class="tmplt-td">$0.00</td>
+                      <td class="tmplt-td">$0.00</td>
+                      <td class="tmplt-td">$0.00</td>
+                      <td class="tmplt-td">$0.00</td>
+                      <td style="border:0px dotted black;"></td>
+                  </tr>
+              </table>
+          </div>
+          <br>
+          <a href="/files/Rent Roll Template.xlsx">Download Excel (xlsx)</a>
+          <br>
+          <br>
+      </div>
+      {{template "Bottombar"}}
+  </body>
+</html>

@@ -5,7 +5,12 @@ import (
 	"os"
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
+	"time"
 )
+
+const ActionInsert = "insert"
+const ActionModify = "modify"
+const ActionRemove = "remove"
 
 func dbCreate(name string) {
 	ex, _ := exists("./" + name + ".sqlite")
@@ -20,7 +25,21 @@ func dbCreate(name string) {
 	}
 	defer db.Close()
 	sqlStmt := `
-	create table tenants (id integer not null primary key, name text);
+	create table tenants
+(id integer not null primary key,
+Action text,
+ActionTimeStamp text,
+Name text,
+Address text,
+SqFt integer,
+LeaseStartDate text,
+LeaseEndDate text,
+BaseRent text,
+Electricity text,
+Gas text,
+Water text,
+SewageTrashRecycle text,
+Comments text);
 	delete from tenants;
 	`
 	_, err = db.Exec(sqlStmt)
@@ -50,14 +69,15 @@ func dbInsert(databaseName, tenantName string) {
 			", tenant (" + tenantName + ")")
 		log.Fatal(err)
 	}
-	stmt, err := tx.Prepare("insert into tenants(id, name) values(?, ?)")
+	stmt, err := tx.Prepare("insert into tenants(id, Action, ActionTimeStamp, Name) values(?, ?, ?, ?)")
 	if err != nil {
 		logError("Couldn't prepare insert in database (" + databaseName + ")" +
 			", tenant (" + tenantName + ")")
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(nil, tenantName)
+	var timestamp = time.Now()
+	_, err = stmt.Exec(nil, ActionInsert, timestamp, tenantName)
 	if err != nil {
 		logError("Couldn't exec insert in database (" + databaseName + ")" +
 			", tenant (" + tenantName + ")")
@@ -88,7 +108,20 @@ func dbReadTenants(databaseName string) []Tenant {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("select id, name from tenants")
+	rows, err := db.Query(`select
+id,
+Name,
+Address,
+SqFt,
+LeaseStartDate,
+LeaseEndDate,
+BaseRent,
+Electricity,
+Gas,
+Water,
+SewageTrashRecycle,
+Comments 
+from tenants`)
 	if err != nil {
 		logError("Couldn't query database (" + databaseName + ")")
 		log.Fatal(err)
@@ -96,12 +129,49 @@ func dbReadTenants(databaseName string) []Tenant {
 	defer rows.Close()
 	tenants := []Tenant{}
 	for rows.Next() {
-		var id int
-		var name string
-		rows.Scan(&id, &name)
-		fmt.Println(id, name)
-		tenants = append(tenants, Tenant{Name: name})
+		var id, SqFt int;
+		var
+		Name,
+		Address,
+		LeaseStartDate,
+		LeaseEndDate,
+		BaseRent,
+		Electricity,
+		Gas,
+		Water,
+		SewageTrashRecycle,
+		Comments string;
+
+		rows.Scan(
+			&id,
+			&Name,
+			&Address,
+			&SqFt,
+			&LeaseStartDate,
+			&LeaseEndDate,
+			&BaseRent,
+			&Electricity,
+			&Gas,
+			&Water,
+			&SewageTrashRecycle,
+			&Comments);
+		
+		//fmt.Println(id, Name, )
+		var tenant = Tenant{
+			Name: Name,
+			Address: Address,
+			SqFt: SqFt,
+			LeaseStartDate: LeaseStartDate,
+			LeaseEndDate: LeaseEndDate,
+			BaseRent: BaseRent,
+			Electricity: Electricity,
+			Gas: Gas,
+			Water: Water,
+			SewageTrashRecycle: SewageTrashRecycle,
+			Comments: Comments};
+		tenants = append(tenants, tenant)
 	}
 	rows.Close()
 	return tenants
 }
+

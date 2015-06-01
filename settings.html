@@ -2,19 +2,18 @@
     <head>
         <title>About</title>
         {{template "Header" .}}
+        <link rel="stylesheet" type="text/css" href="css/settings.css" />
     </head>
     <body>
         {{template "Topbar" .}}
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <p>
-            <table border="0">
-                <tr><td><b>Name</b></td><td><div id="name"></div></td></tr>
-                <tr><td><b>Email</b></td><td><div id="email"></div></td></tr>
-            </table>
-        </p>
+        <div class="body-content">
+            <p class="settings-table">                
+                <table border="0">
+                    <tr><td><b>Name</b></td><td><div id="name"></div></td></tr>
+                    <tr><td><b>Email</b></td><td><div id="email"></div></td></tr>
+                </table>
+            </p>
+        </div>
         {{template "Bottombar"}}
     </body>
 </html>

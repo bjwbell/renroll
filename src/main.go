@@ -82,7 +82,7 @@ type Index struct {
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("indexhandler - start")
 	index := Index{Conf: configuration()}
-	t, _ := template.ParseFiles("idx.html", "templates/header-template.html", "templates/topbar-template.html", "templates/bottombar-template.html")
+	t, _ := template.ParseFiles("idx.html", "templates/header.html", "templates/topbar.html", "templates/bottombar.html")
 	log.Print("indexhandler - execute")
 	t.Execute(w, index)
 }
@@ -91,9 +91,9 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	about := Index{Conf: configuration()}
 	t, _ := template.ParseFiles(
 		"about.html",
-		"templates/header-template.html",
-		"templates/topbar-template.html",
-		"templates/bottombar-template.html")
+		"templates/header.html",
+		"templates/topbar.html",
+		"templates/bottombar.html")
 	t.Execute(w, about)
 }
 
@@ -101,9 +101,9 @@ func contactHandler(w http.ResponseWriter, r *http.Request) {
 	about := Index{Conf: configuration()}
 	t, _ := template.ParseFiles(
 		"contact.html",
-		"templates/header-template.html",
-		"templates/topbar-template.html",
-		"templates/bottombar-template.html")
+		"templates/header.html",
+		"templates/topbar.html",
+		"templates/bottombar.html")
 	t.Execute(w, about)
 }
 
@@ -113,9 +113,9 @@ func settingsHandler(w http.ResponseWriter, r *http.Request) {
 	conf.Conf.FacebookSigninCallback = "fbSettings"
 	t, _ := template.ParseFiles(
 		"settings.html",
-		"templates/header-template.html",
-		"templates/topbar-template.html",
-		"templates/bottombar-template.html")
+		"templates/header.html",
+		"templates/topbar.html",
+		"templates/bottombar.html")
 	t.Execute(w, conf)
 }
 
@@ -129,6 +129,7 @@ func main() {
 	http.HandleFunc("/auth/getemail", getGPlusEmailHandler)
 	http.HandleFunc("/tenants", tenantsHandler)
 	http.HandleFunc("/rentroll", rentRollHandler)
+	http.HandleFunc("/rentrolltemplate", rentRollTemplateHandler)
 	http.HandleFunc("/createaccount", createAccountHandler)
 	http.HandleFunc("/signinform", signinFormHandler)
 	http.HandleFunc("/settings", settingsHandler)

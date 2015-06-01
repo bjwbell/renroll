@@ -11,7 +11,7 @@ type Submit struct {
 func submitHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles(
 		"submit.html",
-		"templates/header-template.html",
-		"templates/bottombar-template.html")
+		"templates/header.html",
+		"templates/bottombar.html")
 	t.Execute(w, Submit{Conf: configuration()})
 }

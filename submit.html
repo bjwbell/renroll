@@ -2,24 +2,21 @@
   <head>
     <title>Renroll - Sign Up</title>
     {{template "Header" .}}
+    <link rel="stylesheet" type="text/css" href="css/topbar.css" />
   </head>
   <body>
-      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <nav class="navbar navbar-fixed-top" role="navigation">
           <div class="container">
               <div class="navbar-header">
                   <h1 class="doordash-logo doordash-logo-inverted">
                       &nbsp;&nbsp;<a href="index.html" id="renroll">Renroll</a>
                   </h1>
               </div>
-              <br/>
+              <br>
           </div>
       </nav>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <p>
-          <br/>
+      <div class="body-content">
+          <br>
           <h2>Sign In With:</h2>
           <span id="gSigninButton">
               <span id="g-callback"
@@ -34,7 +31,7 @@
                     data-scope="{{ .Conf.GooglePlusScopes }}">
               </span>
           </span>
-          <br/>
+          <br>
           <span id="fbSigninButton">
               <span class="fb-login-button"
                     data-max-rows="1"
@@ -45,11 +42,11 @@
                     data-auto-logout-link="true">
               </span>
           </span>
-          <br/>
-          
+          <br>
           <div id="status">
           </div>
-          <br/>
-          {{template "Bottombar"}}
+          <br>
+      </div>
+      {{template "Bottombar"}}
   </body>
 </html>

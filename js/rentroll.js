@@ -41,3 +41,6 @@ function rentRollNotLoggedIn() {
         }
     });*/
 }
+
+function rentRollTemplateNotLoggedIn() {
+}

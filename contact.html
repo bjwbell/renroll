@@ -2,20 +2,19 @@
     <head>
         <title>About</title>
         {{template "Header" .}}
+        <link rel="stylesheet" type="text/css" href="css/contact.css" />
     </head>
     <body>
         {{template "Topbar" .}}
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <p>
-            <table border="0">
-                <tr><td><b>Email</b></td><td>bryan.w.bell@gmail.com</td></tr>
-                <tr><td><b>Mail</b></td><td>2556 Zinfandel Dr, Rancho Cordova, CA</td></tr>
-                <tr><td><b>Phone</b></td><td>530-355-5145</td></tr>
-            </table>
-        </p>
+        <div class="body-content">
+            <p class="contact-table">
+                <table border="0">
+                    <tr><td class="contact-td"><b>Email</b></td><td class="contact-td">bryan.w.bell@gmail.com</td></tr>
+                    <tr><td class="contact-td"><b>Mail</b></td><td class="contact-td"><a href="https://www.google.com/maps/place/2556+Zinfandel+Dr,+Rancho+Cordova,+CA+95670">2556 Zinfandel Dr, Rancho Cordova, CA</a></td></tr>
+                    <tr><td class="contact-td"><b>Phone</b></td><td class="contact-td">530-355-5145</td></tr>
+                </table>
+            </p>
+        </div>
         {{template "Bottombar"}}
     </body>
 </html>

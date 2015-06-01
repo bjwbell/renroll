@@ -1,0 +1,41 @@
+{{define "Tenants"}}
+<link rel="stylesheet" type="text/css" href="css/rentroll-template.css" />
+<span class="as-of-date">
+    <b>As of Date:</b> &nbsp;{{.AsOfDateDay}} {{.AsOfDateMonth}}, {{.AsOfDateYear}}
+    
+</span>
+<br>
+<br>
+<table class="rentroll-table">
+    <tr>
+        <th class="th-tenant">Tenant</th>
+        <th class="th-address">Address</th>
+        <th class="tmplt-th">Sq. Feet</th>
+        <th class="tmplt-th">Lease Start<br>(Date)</th>
+        <th class="tmplt-th">Lease End<br>(Date)</th>
+        <th class="tmplt-th">Base Rent</th>
+        <th class="tmplt-th">Electricity</th>
+        <th class="tmplt-th">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gas&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+        <th class="tmplt-th">&nbsp;&nbsp;&nbsp;Water&nbsp;&nbsp;&nbsp;</th>
+        <th class="tmplt-th">Sewage/Trash/<br>Recyle</th>
+        <th class="tmplt-th">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+        <th class="th-comments">Comments</th>
+    </tr>
+    {{range .Tenants}}
+    <tr>
+        <td class="tmplt-td">{{.Name}}</td>
+        <td class="tmplt-td">{{.Address}}</td>
+        <td class="tmplt-td">{{.SqFt}}</td>
+        <td class="tmplt-td">{{.LeaseStartDate}}</td>
+        <td class="tmplt-td">{{.LeaseEndDate}}</td>
+        <td class="tmplt-td">{{.BaseRent}}</td>
+        <td class="tmplt-td">{{.Electricity}}</td>
+        <td class="tmplt-td">{{.Gas}}</td>
+        <td class="tmplt-td">{{.Water}}</td>
+        <td class="tmplt-td">{{.SewageTrashRecycle}}</td>
+        <td class="tmplt-td">Total</td>
+        <td class="tmplt-td">{{.Comments}}</td>
+    </tr>
+    {{end}}
+</table>
+{{end}}
