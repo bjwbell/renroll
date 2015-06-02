@@ -29,6 +29,7 @@ func dbCreate(name string) {
 (id integer not null primary key,
 Action text,
 ActionTimeStamp text,
+ActionModifyRowId integer,
 Name text,
 Address text,
 SqFt integer,
