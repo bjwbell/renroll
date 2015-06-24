@@ -37,5 +37,45 @@
         <td class="tmplt-td">{{.Comments}}</td>
     </tr>
     {{end}}
+    <tr>
+        <form name="add-tenant" action="addtenant" method="post">
+            <td class="tmplt-td">
+                <input size="23" type="text" title="Name" id="Name" />
+            </td>
+            <td class="tmplt-td">
+                <input size="27" type="text" title="Address" id="Address" />
+            </td>
+            <td class="tmplt-td">
+                <input size="5" type="text" title="SqFt" id="SqFt" value="2000" />
+            </td>
+            <td class="tmplt-td">
+                <input size="10" type="text" title="LeaseStartDate" id="LeaseStartDate" value="{{.DefaultLeaseStartDate}}"  />
+            </td>
+            <td class="tmplt-td">
+                <input size="10" type="text" title="LeaseEndDate" id="LeaseEndDate" value="{{.DefaultLeaseEndDate}}" /></td>
+            <td class="tmplt-td">
+                <input size="5" type="text" title="BaseRent" id="BaseRent" value="1000.00" />
+            </td>
+            <td class="tmplt-td">
+                <input size="5" type="text" title="Electricity" id="Electricity" value="100.00" />
+            </td>
+            <td class="tmplt-td">
+                <input size="5" type="text" title="Gas" id="Gas" value="100.00" />
+            </td>
+            <td class="tmplt-td">
+                <input size="5" type="text" title="Water" id="Water" value="100.00" />
+            </td>
+            <td class="tmplt-td">
+                <input size="5" type="text" title="SewageTrashRecycle" id="SewageTrashRecycle" value="100.00" />
+            </td>
+            <td class="tmplt-td"></td>
+            <td class="tmplt-td">
+                <input size="14" type="text" title="Comments" id="Comments" />
+            </td>
+            <td class="tmplt-td">
+                <input type="submit" value="Add" />
+            </td>
+        </form>
+    </tr>
 </table>
 {{end}}

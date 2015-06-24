@@ -32,6 +32,8 @@ type TenantsTemplate struct {
 	AsOfDateDay string
 	AsOfDateMonth string
 	AsOfDateYear  string
+	DefaultLeaseStartDate string
+	DefaultLeaseEndDate string
 }
 
 type Tenant struct {
@@ -61,12 +63,19 @@ func tenantsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	t, _ := template.ParseFiles("templates/tenants.html")
 	log.Print("tenanthandler - execute")
+	month := time.Now().Month()
+	day := strconv.Itoa(time.Now().Day())
+	year := time.Now().Year()
+	start := strconv.Itoa(int(month)) + "/" + day + "/" + strconv.Itoa(year)
+	end := strconv.Itoa(int(month)) + "/" + day + "/" + strconv.Itoa(year + 3)
 	tenantsTemplate := TenantsTemplate{
 		Conf: configuration(),
 		Tenants: tenants,
-		AsOfDateDay: strconv.Itoa(time.Now().Day()),
-		AsOfDateMonth: time.Now().Month().String(),
+		AsOfDateDay: day,
+		AsOfDateMonth: month.String(),
 		AsOfDateYear: strconv.Itoa(time.Now().Year()),
+		DefaultLeaseStartDate: start,
+		DefaultLeaseEndDate: end,
 	}
 	t.ExecuteTemplate(w, "Tenants", tenantsTemplate)
 }
