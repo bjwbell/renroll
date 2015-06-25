@@ -17,6 +17,9 @@ func rentRollHandler(w http.ResponseWriter, r *http.Request) {
 	conf.GPlusSigninCallback = "gRentRoll"
 	conf.FacebookSigninCallback = "fbRentRoll"
 	rentroll := RentRoll{Conf: conf}
+	if r.FormValue("Name") != "" {
+		addTenant(r.FormValue("DbName"), r.FormValue("Name"))
+	}
 	t, _ := template.ParseFiles(
 		"rentroll.html",
 		"templates/header.html",
@@ -81,7 +84,7 @@ func tenantsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func rentRollTemplateHandler(w http.ResponseWriter, r *http.Request) {
-	log.Print("rentrolltemplatehandler - begin")
+	log.Print("rentrolltemplate - begin")
 	conf := configuration()
 	conf.GPlusSigninCallback = "gRentRollTemplate"
 	conf.FacebookSigninCallback = "fbRentRollTemplate"
@@ -93,4 +96,33 @@ func rentRollTemplateHandler(w http.ResponseWriter, r *http.Request) {
 		"templates/bottombar.html")
 	log.Print("rentrollhandler - execute")
 	t.Execute(w, rentroll)
+}
+
+func addTenant(dbName string, name string) {
+	if name == "" {
+		log.Print("addtenant - NO NAME SET")
+		return
+	}
+	log.Print("addtenant - name")
+	log.Print(name)
+	if dbName == "" {
+		log.Print("addtenant - NO DBNAME SET")
+		return
+	}
+	log.Print("addtenant - dbname")
+	log.Print(dbName)
+
+	/*address := r.FormValue("address")
+	sqft := r.FormValue("sqft")
+	start := r.FormValue("leasestartdate")
+	end := r.FormValue("leaseenddate")
+	base := r.FormValue("baserent")
+	electricity := r.FormValue("electricity")
+	gas := r.FormValue("gas")
+	water := r.FormValue("water")
+	sewagetrashrecycle := r.FormValue("sewagetrashrecycle")
+	comments := r.FormValue("comments")*/
+	log.Print("addtenant - execute")
+	dbInsert(dbName, name)
+	
 }
