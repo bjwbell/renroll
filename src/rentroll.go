@@ -9,6 +9,12 @@ import (
 
 type RentRoll struct {
 	Conf Configuration
+	AsOfDateDay string
+	AsOfDateMonth string
+	AsOfDateYear  string
+	DefaultLeaseStartDate string
+	DefaultLeaseEndDate string
+
 }
 
 func rentRollHandler(w http.ResponseWriter, r *http.Request) {
@@ -16,7 +22,19 @@ func rentRollHandler(w http.ResponseWriter, r *http.Request) {
 	conf := configuration()
 	conf.GPlusSigninCallback = "gRentRoll"
 	conf.FacebookSigninCallback = "fbRentRoll"
-	rentroll := RentRoll{Conf: conf}
+	month := time.Now().Month()
+	day := strconv.Itoa(time.Now().Day())
+	year := time.Now().Year()
+	start := strconv.Itoa(int(month)) + "/" + day + "/" + strconv.Itoa(year)
+	end := strconv.Itoa(int(month)) + "/" + day + "/" + strconv.Itoa(year + 3)
+	rentroll := RentRoll{
+		Conf: conf,
+		AsOfDateDay: day,
+		AsOfDateMonth: month.String(),
+		AsOfDateYear: strconv.Itoa(time.Now().Year()),
+		DefaultLeaseStartDate: start,
+		DefaultLeaseEndDate: end,
+	}
 	if r.FormValue("Name") != "" {
 		addTenant(r.FormValue("DbName"), r.FormValue("Name"))
 	}
@@ -32,11 +50,6 @@ func rentRollHandler(w http.ResponseWriter, r *http.Request) {
 type TenantsTemplate struct {
 	Conf Configuration
 	Tenants []Tenant
-	AsOfDateDay string
-	AsOfDateMonth string
-	AsOfDateYear  string
-	DefaultLeaseStartDate string
-	DefaultLeaseEndDate string
 }
 
 type Tenant struct {
@@ -66,19 +79,9 @@ func tenantsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	t, _ := template.ParseFiles("templates/tenants.html")
 	log.Print("tenanthandler - execute")
-	month := time.Now().Month()
-	day := strconv.Itoa(time.Now().Day())
-	year := time.Now().Year()
-	start := strconv.Itoa(int(month)) + "/" + day + "/" + strconv.Itoa(year)
-	end := strconv.Itoa(int(month)) + "/" + day + "/" + strconv.Itoa(year + 3)
 	tenantsTemplate := TenantsTemplate{
 		Conf: configuration(),
 		Tenants: tenants,
-		AsOfDateDay: day,
-		AsOfDateMonth: month.String(),
-		AsOfDateYear: strconv.Itoa(time.Now().Year()),
-		DefaultLeaseStartDate: start,
-		DefaultLeaseEndDate: end,
 	}
 	t.ExecuteTemplate(w, "Tenants", tenantsTemplate)
 }

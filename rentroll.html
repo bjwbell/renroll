@@ -23,8 +23,12 @@
       </span>
       <div class="body-content">
           <h1>Rent Roll</h1>
-          <div id="tenants">Loading...</div>
-          <br/>
+          <span class="as-of-date">
+              <b>As of Date:</b> &nbsp;{{.AsOfDateMonth}} {{.AsOfDateDay}}, {{.AsOfDateYear}}
+          </span>
+          <br>
+          <div id="tenants"><center>Loading...</center></div>
+          <br>
           <form name="add-tenant" action="rentroll" method="post">
           <table class="rentroll-table">
                   <tr>
@@ -54,10 +58,10 @@
                               <input size="5" type="text" title="SqFt" name="SqFt" value="2000" />
                           </td>
                           <td class="tmplt-td">
-                              <input size="10" type="text" title="LeaseStartDate" name="LeaseStartDate" value=""  />
+                              <input size="10" type="text" title="LeaseStartDate" name="LeaseStartDate" value="{{.DefaultLeaseStartDate}}"  />
                           </td>
                           <td class="tmplt-td">
-                              <input size="10" type="text" title="LeaseEndDate" name="LeaseEndDate" value="" /></td>
+                              <input size="10" type="text" title="LeaseEndDate" name="LeaseEndDate" value="{{.DefaultLeaseEndDate}}" /></td>
                               <td class="tmplt-td">
                                   <input size="5" type="text" title="BaseRent" name="BaseRent" value="1000.00" />
                               </td>
