@@ -50,7 +50,7 @@ Comments text);
 	}
 }
 
-func dbInsert(databaseName, tenantName string) {
+func dbInsert(databaseName, tenantName, address string, sqft int, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments string) {
 	ex, _ := exists("./" + databaseName + ".sqlite")
 	if ex == false {
 		logError("Database (" + databaseName + ") doesnt exist, CREATING")
@@ -70,7 +70,7 @@ func dbInsert(databaseName, tenantName string) {
 			", tenant (" + tenantName + ")")
 		log.Fatal(err)
 	}
-	stmt, err := tx.Prepare("insert into tenants(id, Action, ActionTimeStamp, Name) values(?, ?, ?, ?)")
+	stmt, err := tx.Prepare("insert into tenants(id, Action, ActionTimeStamp, Name, Address, SqFt, LeaseStartDate, LeaseEndDate, BaseRent, Electricity, Gas, Water, SewageTrashRecycle, Comments) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		logError("Couldn't prepare insert in database (" + databaseName + ")" +
 			", tenant (" + tenantName + ")")
@@ -78,7 +78,7 @@ func dbInsert(databaseName, tenantName string) {
 	}
 	defer stmt.Close()
 	var timestamp = time.Now()
-	_, err = stmt.Exec(nil, ActionInsert, timestamp, tenantName)
+	_, err = stmt.Exec(nil, ActionInsert, timestamp, tenantName, address, sqft, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments)
 	if err != nil {
 		logError("Couldn't exec insert in database (" + databaseName + ")" +
 			", tenant (" + tenantName + ")")

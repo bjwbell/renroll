@@ -36,7 +36,19 @@ func rentRollHandler(w http.ResponseWriter, r *http.Request) {
 		DefaultLeaseEndDate: end,
 	}
 	if r.FormValue("Name") != "" {
-		addTenant(r.FormValue("DbName"), r.FormValue("Name"))
+		sqFt, _ := strconv.Atoi(r.FormValue("SqFt"))
+		addTenant(r.FormValue("DbName"),
+			r.FormValue("Name"),
+			r.FormValue("Address"),
+			sqFt,
+			r.FormValue("LeaseStartDate"),
+			r.FormValue("LeaseEndDate"),
+			r.FormValue("BaseRent"),
+			r.FormValue("Electricity"),
+			r.FormValue("Gas"),
+			r.FormValue("Water"),
+			r.FormValue("SewageTrashRecycle"),
+			r.FormValue("Comments"))
 	}
 	t, _ := template.ParseFiles(
 		"rentroll.html",
@@ -101,7 +113,7 @@ func rentRollTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, rentroll)
 }
 
-func addTenant(dbName string, name string) {
+func addTenant(dbName, name, address string, sqft int, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments string) {
 	if name == "" {
 		log.Print("addtenant - NO NAME SET")
 		return
@@ -126,6 +138,5 @@ func addTenant(dbName string, name string) {
 	sewagetrashrecycle := r.FormValue("sewagetrashrecycle")
 	comments := r.FormValue("comments")*/
 	log.Print("addtenant - execute")
-	dbInsert(dbName, name)
-	
+	dbInsert(dbName, name, address, sqft, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments)	
 }

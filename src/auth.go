@@ -60,7 +60,7 @@ func oauth2callback(w http.ResponseWriter, r *http.Request) {
 		log.Print("oauth2callback - NEW ACCOUNT")
 		interestedUser(email, "oauth2callback")
 		dbCreate(email)
-		dbInsert(email, "#1")
+		dbInsert(email, "#1", "", 0, "", "", "", "", "", "", "", "")
 	}
 	w.Write([]byte(email))
 }
@@ -135,7 +135,7 @@ func createAccountHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("createAccountHandler - NEW ACCOUNT: %s", email)
 	interestedUser(email, loginMethod)
 	dbCreate(email)
-	dbInsert(email, "#1")
+	dbInsert(email, "#1", "", 0, "", "", "", "", "", "", "", "")
 	success := "true"
 	w.Write([]byte(success))
 }
