@@ -18,6 +18,56 @@
        function fbSigninForm() {
            window.location.href = '/rentroll';
        }
+
+
+       function addTenantRow() {
+           var tbl = document.getElementById("rentroll-table");
+           if (tbl == undefined) {
+               console.log("Couldn't find rentroll-table element");
+               return;
+           }
+           $("#rentroll-table").append(
+"               <tr>\
+               <input type=\"hidden\" name=\"DbName\" id=\"DbName\" value=\"DbName\" />\
+               <td class=\"tmplt-td\">\
+               <input size=\"23\" type=\"text\" title=\"Name\" name=\"Name\" />\
+               </td>\
+               <td class=\"tmplt-td\">\
+               <input size=\"27\" type=\"text\" title=\"Address\" name=\"Address\" />\
+               </td>\
+               <td class=\"tmplt-td\">\
+               <input size=\"5\" type=\"text\" title=\"SqFt\" name=\"SqFt\" value=\"2000\" />\
+               </td>\
+               <td class=\"tmplt-td\">\
+               <input size=\"10\" type=\"text\" title=\"LeaseStartDate\" name=\"LeaseStartDate\" value=\"{{.DefaultLeaseStartDate}}\"  />\
+               </td>\
+               <td class=\"tmplt-td\">\
+               <input size=\"10\" type=\"text\" title=\"LeaseEndDate\" name=\"LeaseEndDate\" value=\"{{.DefaultLeaseEndDate}}\" /></td>\
+               <td class=\"tmplt-td\">\
+               <input size=\"5\" type=\"text\" title=\"BaseRent\" name=\"BaseRent\" value=\"1000.00\" />\
+               </td>\
+               <td class=\"tmplt-td\">\
+               <input size=\"5\" type=\"text\" title=\"Electricity\" name=\"Electricity\" value=\"100.00\" />\
+               </td>\
+               <td class=\"tmplt-td\">\
+               <input size=\"5\" type=\"text\" title=\"Gas\" name=\"Gas\" value=\"100.00\" />\
+               </td>\
+               <td class=\"tmplt-td\">\
+               <input size=\"5\" type=\"text\" title=\"Water\" name=\"Water\" value=\"100.00\" />\
+               </td>\
+               <td class=\"tmplt-td\">\
+               <input size=\"5\" type=\"text\" title=\"SewageTrashRecycle\" name=\"SewageTrashRecycle\" value=\"100.00\" />\
+               </td>\
+               <td class=\"tmplt-td\"></td>\
+               <td class=\"tmplt-td\">\
+               <input size=\"14\" type=\"text\" title=\"Comments\" name=\"Comments\" />\
+               </td>\
+               <td class=\"tmplt-td\">\
+               <input type=\"submit\" value=\"Add\" />\
+               </td>\
+               </tr>\
+               ");
+       }
       </script>
       <span id="signinform">
       </span>
@@ -27,10 +77,11 @@
               <b>As of Date:</b> &nbsp;{{.AsOfDateMonth}} {{.AsOfDateDay}}, {{.AsOfDateYear}}
           </span>
           <br>
-          <div id="tenants"><center>Loading...</center></div>
-          <br>
           <form name="add-tenant" action="rentroll" method="post">
-          <table class="rentroll-table">
+              <div id="tenants"><center>Loading...</center></div>
+              <br>
+          
+              <!-- table class="rentroll-table">
                   <tr>
                       <th class="th-tenant">Tenant</th>
                       <th class="th-address">Address</th>
@@ -44,48 +95,8 @@
                       <th class="tmplt-th">Sewage/Trash/<br>Recyle</th>
                       <th class="tmplt-th">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                       <th class="th-comments">Comments</th>
-                  </tr>
-                  <tr>
-                      
-                          <input type="hidden" name="DbName" id="DbName" value="DbName" />
-                          <td class="tmplt-td">
-                              <input size="23" type="text" title="Name" name="Name" />
-                          </td>
-                          <td class="tmplt-td">
-                              <input size="27" type="text" title="Address" name="Address" />
-                          </td>
-                          <td class="tmplt-td">
-                              <input size="5" type="text" title="SqFt" name="SqFt" value="2000" />
-                          </td>
-                          <td class="tmplt-td">
-                              <input size="10" type="text" title="LeaseStartDate" name="LeaseStartDate" value="{{.DefaultLeaseStartDate}}"  />
-                          </td>
-                          <td class="tmplt-td">
-                              <input size="10" type="text" title="LeaseEndDate" name="LeaseEndDate" value="{{.DefaultLeaseEndDate}}" /></td>
-                              <td class="tmplt-td">
-                                  <input size="5" type="text" title="BaseRent" name="BaseRent" value="1000.00" />
-                              </td>
-                              <td class="tmplt-td">
-                                  <input size="5" type="text" title="Electricity" name="Electricity" value="100.00" />
-                              </td>
-                              <td class="tmplt-td">
-                                  <input size="5" type="text" title="Gas" name="Gas" value="100.00" />
-                              </td>
-                              <td class="tmplt-td">
-                                  <input size="5" type="text" title="Water" name="Water" value="100.00" />
-                              </td>
-                              <td class="tmplt-td">
-                                  <input size="5" type="text" title="SewageTrashRecycle" name="SewageTrashRecycle" value="100.00" />
-                              </td>
-                              <td class="tmplt-td"></td>
-                              <td class="tmplt-td">
-                                  <input size="14" type="text" title="Comments" name="Comments" />
-                              </td>
-                              <td class="tmplt-td">
-                                  <input type="submit" value="Add" />
-                              </td>
-                      
-                  </tr>
+                  </tr> -->
+                  
           </table>
           </form>
       </div>

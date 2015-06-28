@@ -8,15 +8,16 @@ function populateRentRoll(email) {
         console.log("populateRentRoll - empty email!");
         return;
     }
-    var dbName = document.getElementById("DbName");
-    if (dbName !== undefined) {
-        dbName.value = email;
-    }
     $.ajax({
         url: '/tenants',
         data: { 'email': email },
         success: function (tenants) {
             document.getElementById('tenants').innerHTML = tenants;
+            addTenantRow();
+            var dbName = document.getElementById("DbName");
+            if (dbName !== null) {
+                dbName.value = email;
+            }
         }
     });
 }
