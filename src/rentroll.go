@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"time"
 	"strconv"
+	"github.com/joiggama/money"
 )
 
 type RentRoll struct {
@@ -88,6 +89,7 @@ func tenantsHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		dbName := email
 		tenants = dbReadTenants(dbName)
+		formatCurrency(tenants)
 	}
 	t, _ := template.ParseFiles("templates/tenants.html")
 	log.Print("tenanthandler - execute")
@@ -96,6 +98,29 @@ func tenantsHandler(w http.ResponseWriter, r *http.Request) {
 		Tenants: tenants,
 	}
 	t.ExecuteTemplate(w, "Tenants", tenantsTemplate)
+}
+
+func formatCurrency(tenants []Tenant) {
+	for i, _ := range tenants {
+		tenants[i].BaseRent = formatMoney(tenants[i].BaseRent)
+		tenants[i].Electricity = formatMoney(tenants[i].Electricity)
+		tenants[i].Gas = formatMoney(tenants[i].Gas)
+		tenants[i].Water = formatMoney(tenants[i].Water)
+		tenants[i].SewageTrashRecycle = formatMoney(tenants[i].SewageTrashRecycle)
+	}
+}
+
+func formatMoney(mon string) string {
+	if mon == "" {
+		mon = "0"
+	}
+	val, err := strconv.ParseFloat(mon, 32)
+	if err != nil {
+		log.Print("formatMoney - can't parse money: ")
+		log.Print(mon)
+		return ""
+	}
+	return money.New(val)
 }
 
 func rentRollTemplateHandler(w http.ResponseWriter, r *http.Request) {
