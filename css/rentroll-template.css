@@ -35,3 +35,6 @@
 .tmplt-td {
     border:1px dotted black;
 }
+.td-no-border {
+    border:0px dotted black;
+}
