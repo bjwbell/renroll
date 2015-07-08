@@ -1,4 +1,5 @@
 {{define "Tenants"}}
+
 <br>
 <br>
 <table class="rentroll-table" id="rentroll-table">
@@ -15,6 +16,7 @@
         <th class="tmplt-th">Sewage/Trash/<br>Recyle</th>
         <th class="tmplt-th">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
         <th class="th-comments">Comments</th>
+        <th class="th-th">Action</th>
     </tr>
     {{range .Tenants}}
     <tr>
@@ -30,7 +32,7 @@
         <td class="tmplt-td">{{.SewageTrashRecycle}}</td>
         <td class="tmplt-td">Total</td>
         <td class="tmplt-td">{{.Comments}}</td>
-        <td class="tmplt-td"><a href="">edit</a></td>
+        <td class="tmplt-td" id="Tenant-{{.Id}}"><a href="">edit</a>, <a href="javascript:removeTenant('{{.DbName}}', {{.Id}})">remove</a></td>
     </tr>
     {{end}}
 </table>

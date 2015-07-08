@@ -133,6 +133,8 @@ func main() {
 	http.HandleFunc("/signinform", signinFormHandler)
 	http.HandleFunc("/submit", submitHandler)
 	http.HandleFunc("/tenants", tenantsHandler)
+	http.HandleFunc("/removetenant", removeTenantHandler)
+	http.HandleFunc("/undoremovetenant", undoRemoveTenantHandler)
 	http.Handle("/", http.FileServer(http.Dir("./")))
 	if http.ListenAndServe(":80", nil) != nil {
 		panic(http.ListenAndServe(":8080", nil))

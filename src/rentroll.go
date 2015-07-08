@@ -1,10 +1,11 @@
 package main
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"html/template"
-	"time"
 	"strconv"
+	"time"
 	"github.com/joiggama/money"
 )
 
@@ -61,11 +62,13 @@ func rentRollHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 type TenantsTemplate struct {
-	Conf Configuration
+	Conf Configuration	
 	Tenants []Tenant
 }
 
 type Tenant struct {
+	Id int
+	DbName string
 	Name string
 	Address string
 	SqFt int
@@ -84,8 +87,21 @@ func tenantsHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("tenantshandler - begin")
 	email := r.FormValue("email")
 	if email == "" || email == "dummy@dummy.com" {
-		log.Print("rentroll - NO EMAIL SET")
-		tenants = []Tenant{Tenant{"#1", "", 0, "", "", "", "", "", "", "", ""}}
+		logError("rentroll - NO EMAIL SET")
+		tenants = []Tenant{Tenant{
+			Id: -1,
+			DbName: "",
+			Name: "#1",
+			Address: "",
+			SqFt: 0,
+			LeaseStartDate: "",
+			LeaseEndDate: "",
+			BaseRent: "0",
+			Electricity: "0",
+			Gas: "0",
+			Water: "0",
+			SewageTrashRecycle: "0",
+			Comments: ""}}
 	} else {
 		dbName := email
 		tenants = dbReadTenants(dbName)
@@ -116,8 +132,7 @@ func formatMoney(mon string) string {
 	}
 	val, err := strconv.ParseFloat(mon, 32)
 	if err != nil {
-		log.Print("formatMoney - can't parse money: ")
-		log.Print(mon)
+		logError(fmt.Sprintf("formatMoney - can't parse money: %v", mon))
 		return ""
 	}
 	return money.New(val)
@@ -138,16 +153,43 @@ func rentRollTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, rentroll)
 }
 
-func addTenant(dbName, name, address string, sqft int, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments string) {
+func removeTenantHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("removeTenantHandler - begin")
+	tenantAction(w, r, dbRemoveTenant)
+}
+
+func undoRemoveTenantHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("undoRemoveTenantHandler - begin")
+	tenantAction(w, r, dbUndoRemoveTenant)
+}
+
+func tenantAction(w http.ResponseWriter, r *http.Request, action func(db string, id int) bool) {
+	log.Print("tenantAction - begin")
+	success := true
+	dbName := ""
+
+	if dbName = r.FormValue("DbName"); dbName == "" {
+		logError("Blank DbName")
+		success = false
+	} else if tenantId, err := strconv.Atoi(r.FormValue("TenantId")); err != nil {
+		logError(fmt.Sprintf("Bad TenantId: %v", err))
+		success = false
+	} else {
+		success = action(dbName, tenantId)
+	}
+	w.Write([]byte(strconv.FormatBool(success)))
+}
+
+func addTenant(dbName, name, address string, sqft int, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments string) bool {
 	if name == "" {
-		log.Print("addtenant - NO NAME SET")
-		return
+		logError("addtenant - NO NAME SET")
+		return false
 	}
 	log.Print("addtenant - name")
 	log.Print(name)
 	if dbName == "" {
-		log.Print("addtenant - NO DBNAME SET")
-		return
+		logError("addtenant - NO DBNAME SET")
+		return false
 	}
 	log.Print("addtenant - dbname")
 	log.Print(dbName)
@@ -163,5 +205,17 @@ func addTenant(dbName, name, address string, sqft int, start, end, baseRent, ele
 	sewagetrashrecycle := r.FormValue("sewagetrashrecycle")
 	comments := r.FormValue("comments")*/
 	log.Print("addtenant - execute")
-	dbInsert(dbName, name, address, sqft, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments)	
+	success := dbInsert(dbName, name, address, sqft, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments)
+	if !success {
+		logError("Add tenant, error calling dbInsert")
+	}
+	return success
+}
+
+func removeTenant(dbName string, tenantId int) bool {
+	return dbRemoveTenant(dbName, tenantId)
+}
+
+func undoRemoveTenant(dbName string, tenantId int) bool {
+	return dbUndoRemoveTenant(dbName, tenantId)
 }

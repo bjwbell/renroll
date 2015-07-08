@@ -19,7 +19,32 @@
            window.location.href = '/rentroll';
        }
 
+       function removeTenant(dbName, tenantId) {
+           tenantAction(dbName, tenantId, 'removetenant', '<a href="javascript:undoRemoveTenant(\'' + dbName + '\', ' + tenantId + ')">undo</a>');
+       }
 
+       function undoRemoveTenant(dbName, tenantId) {
+           tenantAction(dbName, tenantId, 'undoremovetenant', '<a href="">dismiss</a>');
+       }
+
+       function tenantAction(dbName, tenantId, action, newValue){
+           $.ajax({
+               url: '/' + action,
+               data: { 'DbName': dbName, 'TenantId': tenantId },
+               success: function (suc) {
+                   var tenantAction = document.getElementById('Tenant-' + tenantId);
+                   if (suc !== 'true') {
+                       logError('Error: tenantAction, action:' + action);
+                   }
+                   if (tenantAction !== null) {
+                       tenantAction.innerHTML = newValue;
+                   } else {
+                       logError('cant get tenant element for tenantId' + tenantId);
+                   }
+               }
+           });
+       }
+       
        function addTenantRow() {
            var tbl = document.getElementById("rentroll-table");
            if (tbl == undefined) {
