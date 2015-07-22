@@ -176,22 +176,7 @@ func dbReadTenants(dbName string) []Tenant {
 		tenants1 = append(tenants1, tenant)
 	}
 	rows.Close()
-	rows2, err := db.Query(`select
-                               ActionTenantId 
-                               from tenants where
-                               Action='remove' and ActionTenantId is not null`)
-	if err != nil {
-		logError("Couldn't query database (" + dbName + ")")
-		log.Fatal(err)
-	}
-	defer rows2.Close()
-	removedIds := []int{}
-	for rows2.Next() {
-		var id int;
-		rows2.Scan(&id)
-		removedIds = append(removedIds, id)
-	}
-	rows2.Close()
+	removedIds := dbRemovedTenantIds(dbName)
 	tenants := []Tenant{}
 	for _, tenant := range tenants1 {
 		removed := false
@@ -208,11 +193,63 @@ func dbReadTenants(dbName string) []Tenant {
 	return tenants
 }
 
+func dbRemovedTenantIds (dbName string) []int {
+	if !dbExists(dbName) {
+		logError("dbReadTenants: CREATING Database (" + dbName + ")")
+		dbCreate(dbName);
+	}
+	db, err := sql.Open("sqlite3", "./" + dbName + ".sqlite")
+	if err != nil {
+		logError("Couldn't read database (" + dbName + ")")
+		log.Fatal(err)
+	}
+	defer db.Close()
+	rows, err := db.Query(`select
+                               ActionTenantId 
+                               from tenants where
+                               Action='` + ActionRemove + `' and ActionTenantId is not null`)
+	if err != nil {
+		logError("Couldn't query database (" + dbName + ")")
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	rows2, err := db.Query(`select
+                               ActionTenantId 
+                               from tenants where
+                               Action='` + ActionUndoRemove + `' and ActionTenantId is not null`)
+	defer rows2.Close()
+	if err != nil {
+		logError("Couldn't query database (" + dbName + ")")
+		log.Fatal(err)
+	}
+	undoRemoveIds := []int{}
+	removedIds := []int{}
+	for rows2.Next() {
+		var id int;
+		rows2.Scan(&id)
+		undoRemoveIds = append(undoRemoveIds, id)
+	}
+
+	Outer:	for rows.Next() {
+		var id int;
+		rows.Scan(&id)
+		for _, undoRemoveId := range undoRemoveIds {
+			if undoRemoveId == id {
+				continue Outer 
+			}
+		}
+		removedIds = append(removedIds, id)
+	}
+	
+	return removedIds
+}
+
 func dbRemoveTenant(dbName string, tenantId int) bool {
 	return dbTenantAction(dbName, ActionRemove, tenantId)
 }
 
 func dbUndoRemoveTenant(dbName string, tenantId int) bool {
+	log.Print("dbUndoRemoveTenant")
 	return dbTenantAction(dbName, ActionUndoRemove, tenantId)
 }
 
@@ -242,7 +279,7 @@ func dbTenantAction(dbName string, action string, tenantId int) bool {
 	}
 	defer stmt.Close()
 	var timestamp = time.Now()
-	_, err = stmt.Exec(nil, ActionRemove, tenantId, timestamp)
+	_, err = stmt.Exec(nil, action, tenantId, timestamp)
 	if err != nil {
 		logError("Couldn't exec remove tenant in database (" +
 			dbName + ")" + ", tenantId (" +
