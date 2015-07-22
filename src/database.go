@@ -120,8 +120,7 @@ func dbReadTenants(dbName string) []Tenant {
 	}
 	defer db.Close()
 	rows, err := db.Query(`select
-                               id,
-                               Action,
+                               id,                               
                                Name, Address, SqFt,
                                LeaseStartDate, LeaseEndDate,
                                BaseRent, Electricity, Gas, Water, SewageTrashRecycle,
@@ -159,6 +158,7 @@ func dbReadTenants(dbName string) []Tenant {
 			&Water,
 			&SewageTrashRecycle,
 			&Comments);
+		
 		var tenant = Tenant{
 			Id: id,
 			DbName: dbName,
