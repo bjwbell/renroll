@@ -8,6 +8,7 @@
     border:1px dashed black;
     box-shadow: 2px 2px 2px #888888;
     border-radius: 5px;
+    border-collapse:collapse;
     padding: 10px;
 }
 
@@ -35,6 +36,7 @@
 .tmplt-td {
     border:1px dotted black;
 }
+
 .td-no-border {
     border:0px dotted black;
 }
