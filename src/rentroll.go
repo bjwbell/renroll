@@ -38,19 +38,7 @@ func rentRollHandler(w http.ResponseWriter, r *http.Request) {
 		DefaultLeaseEndDate: end,
 	}
 	if r.FormValue("Name") != "" {
-		sqFt, _ := strconv.Atoi(r.FormValue("SqFt"))
-		addTenant(r.FormValue("DbName"),
-			r.FormValue("Name"),
-			r.FormValue("Address"),
-			sqFt,
-			r.FormValue("LeaseStartDate"),
-			r.FormValue("LeaseEndDate"),
-			r.FormValue("BaseRent"),
-			r.FormValue("Electricity"),
-			r.FormValue("Gas"),
-			r.FormValue("Water"),
-			r.FormValue("SewageTrashRecycle"),
-			r.FormValue("Comments"))
+		AddTenant(r)
 	}
 	t, _ := template.ParseFiles(
 		"rentroll.html",
@@ -153,6 +141,28 @@ func rentRollTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, rentroll)
 }
 
+func addTenantHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("addTenantHandler - begin")
+	tenantId, _ := AddTenant(r,)
+	w.Write([]byte(strconv.FormatInt(tenantId, 10)))
+}
+
+func AddTenant(r *http.Request) (int64, bool) {
+	sqFt, _ := strconv.Atoi(r.FormValue("SqFt"))
+	return addTenant(r.FormValue("DbName"),
+		r.FormValue("Name"),
+		r.FormValue("Address"),
+		sqFt,
+		r.FormValue("LeaseStartDate"),
+		r.FormValue("LeaseEndDate"),
+		r.FormValue("BaseRent"),
+		r.FormValue("Electricity"),
+		r.FormValue("Gas"),
+		r.FormValue("Water"),
+		r.FormValue("SewageTrashRecycle"),
+		r.FormValue("Comments"))
+}
+
 func removeTenantHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("removeTenantHandler - begin")
 	tenantAction(w, r, dbRemoveTenant)
@@ -180,16 +190,16 @@ func tenantAction(w http.ResponseWriter, r *http.Request, action func(db string,
 	w.Write([]byte(strconv.FormatBool(success)))
 }
 
-func addTenant(dbName, name, address string, sqft int, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments string) bool {
+func addTenant(dbName, name, address string, sqft int, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments string) (int64, bool) {
 	if name == "" {
 		logError("addtenant - NO NAME SET")
-		return false
+		return  -1, false
 	}
 	log.Print("addtenant - name")
 	log.Print(name)
 	if dbName == "" {
 		logError("addtenant - NO DBNAME SET")
-		return false
+		return -1, false
 	}
 	log.Print("addtenant - dbname")
 	log.Print(dbName)
@@ -205,11 +215,11 @@ func addTenant(dbName, name, address string, sqft int, start, end, baseRent, ele
 	sewagetrashrecycle := r.FormValue("sewagetrashrecycle")
 	comments := r.FormValue("comments")*/
 	log.Print("addtenant - execute")
-	success := dbInsert(dbName, name, address, sqft, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments)
+	tenantId, success := dbInsert(dbName, name, address, sqft, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments)
 	if !success {
 		logError("Add tenant, error calling dbInsert")
 	}
-	return success
+	return tenantId, success
 }
 
 func removeTenant(dbName string, tenantId int) bool {

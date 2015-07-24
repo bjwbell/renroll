@@ -34,9 +34,24 @@
 
 
 .tmplt-td {
-    border:1px dotted black;
+    border:1px solid black;
 }
 
 .td-no-border {
     border:0px dotted black;
+}
+.undo {
+    font-size: xx-large;
+    color: salmon;
+    text-align: center;
+    width: 100%;
+}
+
+a.undo:link, a.undo:visited {
+    text-decoration: none;
+    text-align: center;
+}
+
+a.undo:hover {
+    text-decoration: underline;
 }

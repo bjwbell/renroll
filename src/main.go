@@ -133,6 +133,7 @@ func main() {
 	http.HandleFunc("/signinform", signinFormHandler)
 	http.HandleFunc("/submit", submitHandler)
 	http.HandleFunc("/tenants", tenantsHandler)
+	http.HandleFunc("/addtenant", addTenantHandler)
 	http.HandleFunc("/removetenant", removeTenantHandler)
 	http.HandleFunc("/undoremovetenant", undoRemoveTenantHandler)
 	http.Handle("/", http.FileServer(http.Dir("./")))

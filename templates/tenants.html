@@ -19,7 +19,7 @@
         <th class="th-th">Action</th>
     </tr>
     {{range .Tenants}}
-    <tr>
+    <tr id="tr-{{.Id}}">
         <td class="tmplt-td">{{.Name}}</td>
         <td class="tmplt-td">{{.Address}}</td>
         <td class="tmplt-td">{{.SqFt}}</td>
@@ -32,7 +32,7 @@
         <td class="tmplt-td">{{.SewageTrashRecycle}}</td>
         <td class="tmplt-td">Total</td>
         <td class="tmplt-td">{{.Comments}}</td>
-        <td class="tmplt-td" id="Tenant-{{.Id}}"><a href="">edit</a>, <a href="javascript:removeTenant('{{.DbName}}', {{.Id}})">remove</a></td>
+        <td class="tmplt-td"><a href="">edit</a>, <a href="javascript:removeTenant('{{.DbName}}', {{.Id}})">remove</a></td>
     </tr>
     {{end}}
 </table>

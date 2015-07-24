@@ -18,16 +18,45 @@
        function fbSigninForm() {
            window.location.href = '/rentroll';
        }
-
+       //var removedTr = null;
        function removeTenant(dbName, tenantId) {
-           tenantAction(dbName, tenantId, 'removetenant', '<a href="javascript:undoRemoveTenant(\'' + dbName + '\', ' + tenantId + ')">undo</a>');
+           tenantAction(dbName, tenantId, 'removetenant');
+           var tr = null;
+           var idx = null;
+           var tbl = document.getElementById('rentroll-table');
+           for (var i = 0; i < tbl.rows.length; i = i + 1) {
+               var row = tbl.rows[i];
+               if (row.id === 'tr-' + tenantId) {
+                   idx = i;
+                   tr = row;
+                   break;
+               }
+           }
+           removedTr = tr;
+           tr.hidden = true;
+           var undo = document.getElementById('undo');
+           undo.innerHTML = '<a class="undo" href="javascript:undoRemoveTenant(\'' + dbName + '\', ' + tenantId + ', ' + idx + ')"' + '>Undo</a>';
        }
 
-       function undoRemoveTenant(dbName, tenantId) {
-           tenantAction(dbName, tenantId, 'undoremovetenant', '<a href="">dismiss</a>');
+       function undoRemoveTenant(dbName, tenantId, trIdx) {
+           tenantAction(dbName, tenantId, 'undoremovetenant');
+           var tr = document.getElementById('tr-' + tenantId);
+           tr.hidden = false;
+           document.getElementById('undo').innerHTML = '';
        }
 
-       function tenantAction(dbName, tenantId, action, newValue){
+       function formatMoney(num, c, d, t) {
+           var n = num, 
+               c = isNaN(c = Math.abs(c)) ? 2 : c, 
+               d = d == undefined ? "." : d, 
+               t = t == undefined ? "," : t, 
+               s = n < 0 ? "-" : "", 
+               i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+               j = (j = i.length) > 3 ? j % 3 : 0;
+           return "$" + s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+       };
+       
+       function tenantAction(dbName, tenantId, action){
            $.ajax({
                url: '/' + action,
                data: { 'DbName': dbName, 'TenantId': tenantId },
@@ -36,67 +65,72 @@
                    if (suc !== 'true') {
                        logError('Error: tenantAction, action:' + action);
                    }
-                   if (tenantAction !== null) {
-                       tenantAction.innerHTML = newValue;
-                   } else {
-                       logError('cant get tenant element for tenantId' + tenantId);
-                   }
                }
            });
        }
-       
+       function addTenant() {
+           var tr = $("#rentroll-table tr:last");
+           var tenant = { };
+           var lastTr = $("#rentroll-table tr:nth-last-child(2)");
+           var newTr = document.createElement('tr');
+           
+           var dbName = $('#DbName').val();
+           for (var i = 0; i < tr.children().length - 1; i++) {
+               //var td = document.createElement('td');
+               //td.className = 'tmplt-td';
+               var td = document.createElement('td');
+               td.className = 'tmplt-td';
+               if (tr.children()[i].children.length == 0) {
+                   newTr.appendChild(td);
+                   continue;
+               }
+               child = tr.children()[i].children[0];
+               if (child.tagName !== 'INPUT') {
+                   newTr.appendChild(td);
+                   continue;
+               }
+               tenant[child.name] = child.value;
+               //td.textContent = child.value;
+               //tenantEl.appendChild(td);
+               var value = child.value;
+               if (value === parseFloat(value).toFixed(2)) {
+                   value = parseFloat(value).toFixed(2);
+                   value = formatMoney(value);
+               }
+               td.textContent = value;
+               newTr.appendChild(td);
+           }
+           tenant['DbName'] = dbName;
+           $.ajax({
+               url: '/addtenant',
+               data: tenant,
+               success: function (tenantId) {
+                   newTr.id = 'tr-' + tenantId;
+                   var td = document.createElement('td');
+                   td.className = 'tmplt-td';
+                   td.innerHTML = "<a href=\"\">edit</a>, <a href=\"javascript:removeTenant('" + $('#DbName').val() + "', " + tenantId + ")\">remove</a>";
+                   newTr.appendChild(td);
+                   lastTr.after(newTr);
+               }
+           });
+
+       }
        function addTenantRow() {
            var tbl = document.getElementById("rentroll-table");
            if (tbl == undefined) {
                console.log("Couldn't find rentroll-table element");
                return;
            }
-           $("#rentroll-table").append("\
-               <tr>\
-               <td class=\"td-no-border\">\
-&nbsp;\
-               </td>\
-               <td class=\"td-no-border\">\
-\
-               </td>\
-               <td class=\"td-no-border\">\
-\
-               </td>\
-               <td class=\"td-no-border\">\
-\
-               </td>\
-               <td class=\"td-no-border\">\
-\
-               </td>\
-               <td class=\"td-no-border\">\
-\
-               </td>\
-               <td class=\"td-no-border\">\
-\
-               </td>\
-               <td class=\"td-no-border\">\
-\
-               </td>\
-               <td class=\"td-no-border\">\
-\
-               </td>\
-               <td class=\"td-no-border\">\
-\
-               </td>\
-               <td class=\"td-no-border\">\
-\
-               </td>\
-               <td class=\"td-no-border\">\
-\
-               </td>\
-               <td class=\"td-no-border\">\
-\
-               </td>\
-               </tr>");
-           
+           var tr = document.createElement('tr');
+           var td = document.createElement('td');
+           td.innerHTML = '&nbsp;';
+           td.className = 'td-no-border';
+           for (var i = 0; i < 13; i++) {
+               tr.appendChild(td);
+           }
+           $("#rentroll-table").append(tr);
            $("#rentroll-table").append(
 "               <tr>\
-               <input type=\"hidden\" name=\"DbName\" id=\"DbName\" value=\"DbName\" />\
                <td class=\"tmplt-td\">\
                <input size=\"23\" type=\"text\" title=\"Name\" name=\"Name\" />\
                </td>\
@@ -131,7 +165,7 @@
                <input size=\"14\" type=\"text\" title=\"Comments\" name=\"Comments\" />\
                </td>\
                <td class=\"tmplt-td\">\
-               <input type=\"submit\" value=\"Add\" />\
+               <button type=\"button\" onclick='addTenant()'>Add</button>\
                </td>\
                </tr>\
                ");
@@ -146,6 +180,9 @@
           </span>
           <br>
           <form name="add-tenant" action="rentroll" method="post">
+              <br>
+              <div id="undo" class="undo"></div>
+              <input type="hidden" name="DbName" id="DbName" value="DbName" />
               <div id="tenants"><center>Loading...</center></div>
               <br>
           </table>
