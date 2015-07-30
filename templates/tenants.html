@@ -32,7 +32,23 @@
         <td class="tmplt-td">{{.SewageTrashRecycle}}</td>
         <td class="tmplt-td">Total</td>
         <td class="tmplt-td">{{.Comments}}</td>
-        <td class="tmplt-td"><a href="">edit</a>, <a href="javascript:removeTenant('{{.DbName}}', {{.Id}})">remove</a></td>
+        <td class="tmplt-td"><a href="javascript:editTenant('{{.DbName}}', {{.Id}})">edit</a>, <a href="javascript:removeTenant('{{.DbName}}', {{.Id}})">remove</a></td>
+    </tr>
+
+    <tr id="tr-edit-{{.Id}}" hidden="true">
+        <td class="tmplt-td"><input type="text" size="23" name="Name" value="{{.Name}}"/></td>
+        <td class="tmplt-td"><input type="text" size="27" name="Address" value="{{.Address}}" /></td>
+        <td class="tmplt-td"><input type="text" size="5" name="SqFt" value="{{.SqFt}}"/></td>
+        <td class="tmplt-td"><input type="text" size="10" name="LeaseStartDate" value="{{.LeaseStartDate}}"/></td>
+        <td class="tmplt-td"><input type="text" size ="10" name="LeaseEndDate" value="{{.LeaseEndDate}}"/></td>
+        <td class="tmplt-td"><input type="text" size="5" rent="true" name="BaseRent" value="{{.BaseRent}}"/></td>
+        <td class="tmplt-td"><input type="text" size="5" rent="true" name="Electricity" value="{{.Electricity}}"/></td>
+        <td class="tmplt-td"><input type="text" size="5" rent="true" name="Gas" value="{{.Gas}}"/></td>
+        <td class="tmplt-td"><input type="text" size="5" rent="true" name="Water" value="{{.Water}}"/></td>
+        <td class="tmplt-td"><input type="text" size="5" rent="true" name="SewageTrashRecycle" value="{{.SewageTrashRecycle}}"/></td>
+        <td class="tmplt-td">Total</td>
+        <td class="tmplt-td"><input type="text" size="14" name="Comments" value="{{.Comments}}"/></td>
+        <td class="tmplt-td"><a href="javascript:saveTenant({{.Id}})">save</a></td>
     </tr>
     {{end}}
 </table>

@@ -10,7 +10,8 @@ import (
 )
 
 const ActionInsert = "insert"
-const ActionModify = "modify"
+const ActionUpdate = "update"
+const ActionUndoUpdate = "update"
 const ActionRemove = "remove"
 const ActionUndoRemove = "undoremove"
 
@@ -109,7 +110,56 @@ func dbInsert(dbName, tenantName, address string, sqft int, start, end, baseRent
 	return id, true
 }
 
-func dbReadTenants(dbName string) []Tenant {
+
+func dbUpdate(dbName string, tenantId int, tenantName, address string, sqft int, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments string) bool {
+
+	if !dbExists(dbName) {
+		return false
+	}
+	fmt.Println("dbUpdate - tenantId:")
+	fmt.Println(tenantId)
+	db, err := sql.Open("sqlite3", "./" + dbName + ".sqlite")
+	if err != nil {
+		logError("Couldn't open database (" + dbName + ")" +
+			", tenant (" + tenantName + ")")
+		log.Fatal(err)
+		return false
+	}
+	defer db.Close()
+
+	tx, err := db.Begin()
+	if err != nil {
+		logError("Couldn't exec begin for database (" + dbName + ")" +
+			", tenant (" + tenantName + ")")
+		log.Fatal(err)
+		return false
+	}
+	stmt, err := tx.Prepare("insert into tenants(id, Action, ActionTenantId, ActionTimeStamp, Name, Address, SqFt, LeaseStartDate, LeaseEndDate, BaseRent, Electricity, Gas, Water, SewageTrashRecycle, Comments) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	if err != nil {
+		logError("Couldn't prepare update insert in database (" + dbName + ")" +
+			", tenant (" + tenantName + ")")
+		log.Fatal(err)
+		return false
+	}
+	defer stmt.Close()
+	var timestamp = time.Now()
+	_, err = stmt.Exec(nil, ActionUpdate, tenantId, timestamp, tenantName, address, sqft, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments)
+	if err != nil {
+		logError("Couldn't exec update insert in database (" + dbName + ")" +
+			", tenant (" + tenantName + ")")
+		log.Fatal(err)
+		return false
+	}
+	if err = tx.Commit(); err != nil {
+		logError("Couldn't exec update insert in database (" + dbName + ")" +
+			", tenant (" + tenantName + ")")
+		log.Fatal(err)
+		return false
+	}
+	return true
+}
+
+func dbReadTenants(dbName string) map[int]Tenant {
 	if !dbExists(dbName) {
 		logError("dbReadTenants: CREATING Database (" + dbName + ")")
 		dbCreate(dbName);
@@ -178,7 +228,7 @@ func dbReadTenants(dbName string) []Tenant {
 	}
 	rows.Close()
 	removedIds := dbRemovedTenantIds(dbName)
-	tenants := []Tenant{}
+	tenants := map[int]Tenant{}
 	for _, tenant := range tenants1 {
 		removed := false
 		for _, tenantId := range removedIds {
@@ -188,7 +238,10 @@ func dbReadTenants(dbName string) []Tenant {
 			}
 		}
 		if !removed {
-			tenants = append(tenants, tenant)
+			tenants[tenant.Id] = tenant
+			if new, err := dbUpdatedTenantValues(dbName, tenant.Id); err {
+				tenants[tenant.Id] = new
+			}
 		} 
 	}
 	return tenants
@@ -266,6 +319,85 @@ func dbRemovedTenantIds (dbName string) []int {
 	return removedIds
 }
 
+func dbUpdatedTenantValues(dbName string, tenantId int) (Tenant, bool) {
+			fmt.Println("Updated Tenant Values - tenantId:")
+		fmt.Println(tenantId)
+
+	if !dbExists(dbName) {
+		logError("dbReadTenants: CREATING Database (" + dbName + ")")
+		dbCreate(dbName);
+	}
+	db, err := sql.Open("sqlite3", "./" + dbName + ".sqlite")
+	if err != nil {
+		logError("Couldn't read database (" + dbName + ")")
+		log.Fatal(err)
+	}
+	defer db.Close()
+	rows, err := db.Query(`select
+                               Name, Address, SqFt,
+                               LeaseStartDate, LeaseEndDate,
+                               BaseRent, Electricity, Gas, Water, SewageTrashRecycle,
+                               Comments  from tenants where Action='` + ActionUpdate + `' and ActionTenantId=` + strconv.Itoa(tenantId))
+	if err != nil {
+		logError("Couldn't query database (" + dbName + ")")
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	tenants1 := []Tenant{}
+	for rows.Next() {
+		var SqFt int;
+		var
+		Name,
+		Address,
+		LeaseStartDate,
+		LeaseEndDate,
+		BaseRent,
+		Electricity,
+		Gas,
+		Water,
+		SewageTrashRecycle,
+		Comments string;
+
+		rows.Scan(
+			&Name,
+			&Address,
+			&SqFt,
+			&LeaseStartDate,
+			&LeaseEndDate,
+			&BaseRent,
+			&Electricity,
+			&Gas,
+			&Water,
+			&SewageTrashRecycle,
+			&Comments);
+		
+		var tenant = Tenant{
+			Id: tenantId,
+			DbName: dbName,
+			Name: Name,
+			Address: Address,
+			SqFt: SqFt,
+			LeaseStartDate: LeaseStartDate,
+			LeaseEndDate: LeaseEndDate,
+			BaseRent: BaseRent,
+			Electricity: Electricity,
+			Gas: Gas,
+			Water: Water,
+			SewageTrashRecycle: SewageTrashRecycle,
+			Comments: Comments};
+		tenants1 = append(tenants1, tenant)
+	}
+	if (len(tenants1) > 0) {
+		fmt.Println("Updated Tenant Values - tenantId:")
+		fmt.Println(tenantId)
+		fmt.Println("new values:")
+		fmt.Println(tenants1[len(tenants1) - 1])
+		return tenants1[len(tenants1) - 1], true
+	} else {
+		return Tenant{}, false
+	}
+}
+
 func dbRemoveTenant(dbName string, tenantId int) bool {
 	return dbTenantAction(dbName, ActionRemove, tenantId)
 }
@@ -273,6 +405,11 @@ func dbRemoveTenant(dbName string, tenantId int) bool {
 func dbUndoRemoveTenant(dbName string, tenantId int) bool {
 	log.Print("dbUndoRemoveTenant")
 	return dbTenantAction(dbName, ActionUndoRemove, tenantId)
+}
+
+func dbUndoUpdateTenant(dbName string, tenantId int) bool {
+	log.Print("dbUndoRemoveTenant")
+	return dbTenantAction(dbName, ActionUndoUpdate, tenantId)
 }
 
 func dbTenantAction(dbName string, action string, tenantId int) bool {

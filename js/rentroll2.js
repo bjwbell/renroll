@@ -1,20 +1,37 @@
 function removeTenant(dbName, tenantId) {
-           tenantAction(dbName, tenantId, 'removetenant');
-           var tr = null;
-           var idx = null;
-           var tbl = document.getElementById('rentroll-table');
-           for (var i = 0; i < tbl.rows.length; i = i + 1) {
-               var row = tbl.rows[i];
-               if (row.id === 'tr-' + tenantId) {
-                   idx = i;
-                   tr = row;
-                   break;
-               }
-           }
-           removedTr = tr;
-           tr.hidden = true;
-           var undo = document.getElementById('undo');
-           undo.innerHTML = '<a class="undo" href="javascript:undoRemoveTenant(\'' + dbName + '\', ' + tenantId + ', ' + idx + ')"' + '>Undo</a>';
+    tenantAction(dbName, tenantId, 'removetenant');
+    var tr = null;
+    var idx = null;
+    var tbl = document.getElementById('rentroll-table');
+    for (var i = 0; i < tbl.rows.length; i = i + 1) {
+        var row = tbl.rows[i];
+        if (row.id === 'tr-' + tenantId) {
+            idx = i;
+            tr = row;
+            break;
+        }
+    }
+    removedTr = tr;
+    tr.hidden = true;
+    var undo = document.getElementById('undo');
+    if (undo === null) {
+        logError("removeTenant - no undo element!");
+        return;
+    } else {
+        undo.innerHTML = '<a class="undo" href="javascript:undoRemoveTenant(\'' + dbName + '\', ' + tenantId + ', ' + idx + ')"' + '>Undo</a>';
+    }
+}
+
+
+function editTenant(dbName, tenantId) {
+    var tr = document.getElementById("tr-" + tenantId);
+    var editTR = document.getElementById("tr-edit-" + tenantId);
+    if (tr === null || editTR === null) {
+        logError("editTenant - no TR!");
+        return;
+    }
+    tr.hidden = true;
+    editTR.hidden = false;
 }
 
 
@@ -98,4 +115,56 @@ function addTenant() {
     });
 }
 
+function saveTenant(tenantId) {
+    var tr = document.getElementById("tr-" + tenantId);
+    var editTr = document.getElementById("tr-edit-" + tenantId);
+    var tenant = { };
+    var newTr = document.createElement('tr');
+    var dbName = $('#DbName').val();
+    for (var i = 0; i < editTr.children.length - 1; i++) {
+        var td = document.createElement('td');
+        td.className = 'tmplt-td';
+        if (editTr.children[i].children.length == 0) {
+            newTr.appendChild(td);
+            continue;
+        }
+        var child = editTr.children[i].children[0];
+        if (child.tagName !== 'INPUT') {
+            newTr.appendChild(td);
+            continue;
+        }
+        tenant[child.name] = child.value;
+        var value = child.value;
+        
+        if (child.getAttribute('rent') !== null && child.getAttribute('rent') === 'true') {
+            value = value.replace("$", "").replace(",", "");
+            tenant[child.name] = value;
+        }
+            /*if (val === parseFloat(val).toFixed(2)) {
+            value = parseFloat(val).toFixed(2);
+            //value = formatMoney(val);
+        }*/
+        td.textContent = value;
+        newTr.appendChild(td);
+    }
+    tenant['DbName'] = dbName;
+    tenant['TenantId'] = tenantId;
+    $.ajax({
+        url: '/updatetenant',
+        data: tenant,
+        success: function (success) {
+            if (success) {
+                newTr.id = 'tr-' + tenantId;
+                var td = document.createElement('td');
+                td.className = 'tmplt-td';
+                td.innerHTML = "<a href=\"\">edit</a>, <a href=\"javascript:removeTenant('" + $('#DbName').val() + "', " + tenantId + ")\">remove</a>";
+                newTr.appendChild(td);
+                $("tr-edit-" + tenantId).before(newTr);
+                //editTr.before(newTr);
+            } else {
+                logError("Error updating tenant");
+            }
+        }
+    });
 
+}
