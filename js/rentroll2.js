@@ -117,20 +117,20 @@ function addTenant() {
 
 function saveTenant(tenantId) {
     var tr = document.getElementById("tr-" + tenantId);
-    var editTr = document.getElementById("tr-edit-" + tenantId);
+    var editTR = document.getElementById("tr-edit-" + tenantId);
     var tenant = { };
-    var newTr = document.createElement('tr');
+    var newTR = document.createElement('tr');
     var dbName = $('#DbName').val();
-    for (var i = 0; i < editTr.children.length - 1; i++) {
+    for (var i = 0; i < editTR.children.length - 1; i++) {
         var td = document.createElement('td');
         td.className = 'tmplt-td';
-        if (editTr.children[i].children.length == 0) {
-            newTr.appendChild(td);
+        if (editTR.children[i].children.length == 0) {
+            newTR.appendChild(td);
             continue;
         }
-        var child = editTr.children[i].children[0];
+        var child = editTR.children[i].children[0];
         if (child.tagName !== 'INPUT') {
-            newTr.appendChild(td);
+            newTR.appendChild(td);
             continue;
         }
         tenant[child.name] = child.value;
@@ -141,7 +141,7 @@ function saveTenant(tenantId) {
             tenant[child.name] = value;
         }
         td.textContent = value;
-        newTr.appendChild(td);
+        newTR.appendChild(td);
     }
     tenant['DbName'] = dbName;
     tenant['TenantId'] = tenantId;
@@ -153,10 +153,10 @@ function saveTenant(tenantId) {
                 var td = document.createElement('td');
                 td.className = 'tmplt-td';
                 td.innerHTML = "<a href=\"\">edit</a>, <a href=\"javascript:removeTenant('" + $('#DbName').val() + "', " + tenantId + ")\">remove</a>";
-                newTr.appendChild(td);
-                editTr.hidden = true;
-                tr.parentNode.replaceChild(newTr, tr);
-                newTr.id = 'tr-' + tenantId;
+                newTR.appendChild(td);
+                editTR.hidden = true;
+                tr.parentNode.replaceChild(newTR, tr);
+                newTR.id = 'tr-' + tenantId;
             } else {
                 logError("Error updating tenant");
             }
