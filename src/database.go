@@ -11,7 +11,7 @@ import (
 
 const ActionInsert = "insert"
 const ActionUpdate = "update"
-const ActionUndoUpdate = "update"
+const ActionUndoUpdate = "undoupdate"
 const ActionRemove = "remove"
 const ActionUndoRemove = "undoremove"
 
@@ -343,7 +343,24 @@ func dbUpdatedTenantValues(dbName string, tenantId int) (Tenant, bool) {
 		log.Fatal(err)
 	}
 	defer rows.Close()
+	rows2, err := db.Query(`select
+                               ActionTenantId 
+                               from tenants where
+                               Action='` + ActionUndoUpdate + `' and ActionTenantId is not null and ActionTenantId=` + strconv.Itoa(tenantId))
+	defer rows2.Close()
+	if err != nil {
+		logError("Couldn't query database (" + dbName + ")")
+		log.Fatal(err)
+	}
+
 	tenants1 := []Tenant{}
+	undoIds := []int{}
+		for rows2.Next() {
+		var id int;
+		rows2.Scan(&id)
+		undoIds = append(undoIds, id)
+	}
+
 	for rows.Next() {
 		var SqFt int;
 		var
@@ -387,7 +404,9 @@ func dbUpdatedTenantValues(dbName string, tenantId int) (Tenant, bool) {
 			Comments: Comments};
 		tenants1 = append(tenants1, tenant)
 	}
-	if (len(tenants1) > 0) {
+
+	
+	if (len(tenants1) > 0 && len(undoIds) == 0) {
 		fmt.Println("Updated Tenant Values - tenantId:")
 		fmt.Println(tenantId)
 		fmt.Println("new values:")

@@ -114,7 +114,7 @@ function addTenant() {
         }
     });
 }
-
+var oldTR = null;
 function saveTenant(tenantId) {
     var tr = document.getElementById("tr-" + tenantId);
     var editTR = document.getElementById("tr-edit-" + tenantId);
@@ -155,12 +155,21 @@ function saveTenant(tenantId) {
                 td.innerHTML = "<a href=\"\">edit</a>, <a href=\"javascript:removeTenant('" + $('#DbName').val() + "', " + tenantId + ")\">remove</a>";
                 newTR.appendChild(td);
                 editTR.hidden = true;
-                tr.parentNode.replaceChild(newTR, tr);
+                oldTR = tr.parentNode.replaceChild(newTR, tr);
                 newTR.id = 'tr-' + tenantId;
+                undo.innerHTML = '<a class="undo" href="javascript:undoSaveTenant(' + tenantId + ')">Undo</a>';
             } else {
                 logError("Error updating tenant");
             }
         }
     });
 
+}
+
+function undoSaveTenant(tenantId) {
+    var dbName = $('#DbName').val();
+    tenantAction(dbName, tenantId, 'undoupdatetenant');
+    var tr = document.getElementById('tr-' + tenantId);
+    tr.parentNode.replaceChild(oldTR, tr);
+    document.getElementById('undo').innerHTML = '';
 }

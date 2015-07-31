@@ -203,6 +203,7 @@ func undoRemoveTenantHandler(w http.ResponseWriter, r *http.Request) {
 	tenantAction(w, r, dbUndoRemoveTenant)
 }
 
+
 func tenantAction(w http.ResponseWriter, r *http.Request, action func(db string, id int) bool) {
 	log.Print("tenantAction - begin")
 	success := true
@@ -258,14 +259,7 @@ func updateTenant(dbName string, tenantId int, name, address string, sqft int, s
 	return success
 }
 
-func removeTenant(dbName string, tenantId int) bool {
-	return dbRemoveTenant(dbName, tenantId)
-}
-
-func undoRemoveTenant(dbName string, tenantId int) bool {
-	return dbUndoRemoveTenant(dbName, tenantId)
-}
-
-func undoUpdateTenant(dbName string, tenantId int) bool {
-	return dbUndoUpdateTenant(dbName, tenantId)
+func undoUpdateTenantHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("undoUpdateTenantHandler - begin")
+	tenantAction(w, r, dbUndoUpdateTenant)
 }
