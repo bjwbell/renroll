@@ -171,5 +171,6 @@ function undoSaveTenant(tenantId) {
     tenantAction(dbName, tenantId, 'undoupdatetenant');
     var tr = document.getElementById('tr-' + tenantId);
     tr.parentNode.replaceChild(oldTR, tr);
+    oldTR.hidden = false;
     document.getElementById('undo').innerHTML = '';
 }
