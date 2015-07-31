@@ -140,10 +140,6 @@ function saveTenant(tenantId) {
             value = value.replace("$", "").replace(",", "");
             tenant[child.name] = value;
         }
-            /*if (val === parseFloat(val).toFixed(2)) {
-            value = parseFloat(val).toFixed(2);
-            //value = formatMoney(val);
-        }*/
         td.textContent = value;
         newTr.appendChild(td);
     }
@@ -154,13 +150,13 @@ function saveTenant(tenantId) {
         data: tenant,
         success: function (success) {
             if (success) {
-                newTr.id = 'tr-' + tenantId;
                 var td = document.createElement('td');
                 td.className = 'tmplt-td';
                 td.innerHTML = "<a href=\"\">edit</a>, <a href=\"javascript:removeTenant('" + $('#DbName').val() + "', " + tenantId + ")\">remove</a>";
                 newTr.appendChild(td);
-                $("tr-edit-" + tenantId).before(newTr);
-                //editTr.before(newTr);
+                editTr.hidden = true;
+                tr.parentNode.replaceChild(newTr, tr);
+                newTr.id = 'tr-' + tenantId;
             } else {
                 logError("Error updating tenant");
             }
