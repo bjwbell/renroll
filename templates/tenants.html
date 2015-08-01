@@ -32,7 +32,7 @@
         <td class="tmplt-td">{{.SewageTrashRecycle}}</td>
         <td class="tmplt-td">Total</td>
         <td class="tmplt-td">{{.Comments}}</td>
-        <td class="tmplt-td"><a href="javascript:editTenant('{{.DbName}}', {{.Id}})">edit</a>, <a href="javascript:removeTenant('{{.DbName}}', {{.Id}})">remove</a></td>
+        <td class="tmplt-td"><a href="javascript:editTenant({{.Id}})">edit</a>, <a href="javascript:removeTenant({{.Id}})">remove</a></td>
     </tr>
 
     <tr id="tr-edit-{{.Id}}" hidden="true">

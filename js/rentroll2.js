@@ -1,4 +1,5 @@
-function removeTenant(dbName, tenantId) {
+function removeTenant(tenantId) {
+    var dbName = $('#DbName').val();
     tenantAction(dbName, tenantId, 'removetenant');
     var tr = null;
     var idx = null;
@@ -18,12 +19,12 @@ function removeTenant(dbName, tenantId) {
         logError("removeTenant - no undo element!");
         return;
     } else {
-        undo.innerHTML = '<a class="undo" href="javascript:undoRemoveTenant(\'' + dbName + '\', ' + tenantId + ', ' + idx + ')"' + '>Undo</a>';
+        undo.innerHTML = '<a class="undo" href="javascript:undoRemoveTenant(' + tenantId + ', ' + idx + ')"' + '>Undo</a>';
     }
 }
 
 
-function editTenant(dbName, tenantId) {
+function editTenant(tenantId) {
     var tr = document.getElementById("tr-" + tenantId);
     var editTR = document.getElementById("tr-edit-" + tenantId);
     if (tr === null || editTR === null) {
@@ -43,7 +44,8 @@ function fbSigninForm() {
     window.location.href = '/rentroll';
 }
 
-function undoRemoveTenant(dbName, tenantId, trIdx) {
+function undoRemoveTenant(tenantId, trIdx) {
+    var dbName = $('#DbName').val();
     tenantAction(dbName, tenantId, 'undoremovetenant');
     var tr = document.getElementById('tr-' + tenantId);
     tr.hidden = false;
@@ -73,6 +75,10 @@ function tenantAction(dbName, tenantId, action){
         }
     });
 }
+function tenantActionsHtml(tenantId) {
+    return "<a href=\"javascript:editTenant(" + tenantId + ")\">edit</a>, <a href=\"javascript:removeTenant(" + tenantId + ")\">remove</a>";
+}
+
 function addTenant() {
     var tr = $("#rentroll-table tr:last");
     var tenant = { };
@@ -108,7 +114,7 @@ function addTenant() {
             newTr.id = 'tr-' + tenantId;
             var td = document.createElement('td');
             td.className = 'tmplt-td';
-            td.innerHTML = "<a href=\"\">edit</a>, <a href=\"javascript:removeTenant('" + $('#DbName').val() + "', " + tenantId + ")\">remove</a>";
+            td.innerHTML = tenantActionsHtml(tenantId);
             newTr.appendChild(td);
             lastTr.after(newTr);
         }
@@ -152,7 +158,7 @@ function saveTenant(tenantId) {
             if (success) {
                 var td = document.createElement('td');
                 td.className = 'tmplt-td';
-                td.innerHTML = "<a href=\"\">edit</a>, <a href=\"javascript:removeTenant('" + $('#DbName').val() + "', " + tenantId + ")\">remove</a>";
+                td.innerHTML = tenantActionsHtml(tenantId);
                 newTR.appendChild(td);
                 editTR.hidden = true;
                 oldTR = tr.parentNode.replaceChild(newTR, tr);

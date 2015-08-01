@@ -12,22 +12,13 @@
       </span>
       <script src="js/rentroll2.js"></script>
       <script>
-       function addTenantRow() {
-           var tbl = document.getElementById("rentroll-table");
-           if (tbl == undefined) {
-               console.log("Couldn't find rentroll-table element");
-               return;
+       function editTRHtml(trId, isAdd, tenantId) {
+           var txt = "<button type=\"button\" onclick='addTenant()'>Add</button>";
+           if (isAdd === false) {
+               txt = tenantActionsHtml(tenantId);
            }
-           var tr = document.createElement('tr');
-           var td = document.createElement('td');
-           td.innerHTML = '&nbsp;';
-           td.className = 'td-no-border';
-           for (var i = 0; i < 13; i++) {
-               tr.appendChild(td);
-           }
-           $("#rentroll-table").append(tr);
-           $("#rentroll-table").append(
-"               <tr>\
+           
+return "               <tr id=\"" + trId +"\">\
                <td class=\"tmplt-td\">\
                <input size=\"23\" type=\"text\" title=\"Name\" name=\"Name\" />\
                </td>\
@@ -62,10 +53,26 @@
                <input size=\"14\" type=\"text\" title=\"Comments\" name=\"Comments\" />\
                </td>\
                <td class=\"tmplt-td\">\
-               <button type=\"button\" onclick='addTenant()'>Add</button>\
+               " + txt + "\
                </td>\
                </tr>\
-               ");
+               ";           
+       }
+       function addTenantRow() {
+           var tbl = document.getElementById("rentroll-table");
+           if (tbl == undefined) {
+               console.log("Couldn't find rentroll-table element");
+               return;
+           }
+           var tr = document.createElement('tr');
+           var td = document.createElement('td');
+           td.innerHTML = '&nbsp;';
+           td.className = 'td-no-border';
+           for (var i = 0; i < 13; i++) {
+               tr.appendChild(td);
+           }
+           $("#rentroll-table").append(tr);
+           $("#rentroll-table").append(editTRHtml('tr-add', true);
        }
       </script>
       <span id="signinform">
