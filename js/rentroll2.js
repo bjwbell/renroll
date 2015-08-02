@@ -116,7 +116,11 @@ function addTenant() {
             td.className = 'tmplt-td';
             td.innerHTML = tenantActionsHtml(tenantId);
             newTr.appendChild(td);
-            lastTr.after(newTr);
+            lastTr.before(newTr);
+            var editTr = editTRHtml('tr-edit-' + tenantId, false, tenantId);
+            lastTr.before(editTr);
+            editTr = document.getElementById('tr-edit-' + tenantId);
+            editTr.hidden = true;
         }
     });
 }
