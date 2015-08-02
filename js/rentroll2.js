@@ -117,7 +117,7 @@ function addTenant() {
             td.innerHTML = tenantActionsHtml(tenantId);
             newTr.appendChild(td);
             lastTr.before(newTr);
-            var editTr = editTRHtml('tr-edit-' + tenantId, false, tenantId);
+            var editTr = editTRHtml('tr-edit-' + tenantId, 'edit', tenantId, tenant);
             lastTr.before(editTr);
             editTr = document.getElementById('tr-edit-' + tenantId);
             editTr.hidden = true;

@@ -12,45 +12,61 @@
       </span>
       <script src="js/rentroll2.js"></script>
       <script>
-       function editTRHtml(trId, isAdd, tenantId) {
+       function editTRHtml(trId, trType, tenantId, tenant) {
            var txt = "<button type=\"button\" onclick='addTenant()'>Add</button>";
-           if (isAdd === false) {
+           if (trType === 'normal') {
                txt = tenantActionsHtml(tenantId);
+           } else if (trType === 'edit') {
+               txt = '<a href="javascript:saveTenant(' + tenantId + ')">save</a>';
+           }
+           if (tenant === null || tenant === undefined) {
+               tenant = {
+                   Name: '',
+                   Address: '',
+                   SqFt: '2000',
+                   LeaseStartDate: '{{.DefaultLeaseStartDate}}',
+                   LeaseEndDate: '{{.DefaultLeaseEndDate}}',
+                   BaseRent: '1000.00',
+                   Electricity: '100.00',
+                   Gas: '100.00',
+                   Water: '100.00',
+                   SewageTrashRecycle: '100.00',
+                   Comments: ''};
            }
            
 return "<tr id=\"" + trId +"\">\
                <td class=\"tmplt-td\">\
-               <input size=\"23\" type=\"text\" title=\"Name\" name=\"Name\" />\
+               <input size=\"23\" type=\"text\" title=\"Name\" name=\"Name\" value=\"" + tenant.Name + "\" />\
                </td>\
                <td class=\"tmplt-td\">\
-               <input size=\"27\" type=\"text\" title=\"Address\" name=\"Address\" />\
+               <input size=\"27\" type=\"text\" title=\"Address\" name=\"Address\" value=\"" + tenant.Address + "\" />\
                </td>\
                <td class=\"tmplt-td\">\
-               <input size=\"5\" type=\"text\" title=\"SqFt\" name=\"SqFt\" value=\"2000\" />\
+               <input size=\"5\" type=\"text\" title=\"SqFt\" name=\"SqFt\" value=\"" + tenant.SqFt + "\" />\
                </td>\
                <td class=\"tmplt-td\">\
-               <input size=\"10\" type=\"text\" title=\"LeaseStartDate\" name=\"LeaseStartDate\" value=\"{{.DefaultLeaseStartDate}}\"  />\
+               <input size=\"10\" type=\"text\" title=\"LeaseStartDate\" name=\"LeaseStartDate\" value=\"" + tenant.LeaseStartDate + "\" />\
                </td>\
                <td class=\"tmplt-td\">\
-               <input size=\"10\" type=\"text\" title=\"LeaseEndDate\" name=\"LeaseEndDate\" value=\"{{.DefaultLeaseEndDate}}\" /></td>\
+               <input size=\"10\" type=\"text\" title=\"LeaseEndDate\" name=\"LeaseEndDate\" value=\"" + tenant.LeaseEndDate + "\"/></td>\
                <td class=\"tmplt-td\">\
-               <input size=\"5\" type=\"text\" title=\"BaseRent\" name=\"BaseRent\" value=\"1000.00\" />\
+               <input size=\"5\" type=\"text\" title=\"BaseRent\" name=\"BaseRent\" value=\"" + tenant.BaseRent + "\"/>\
                </td>\
                <td class=\"tmplt-td\">\
-               <input size=\"5\" type=\"text\" title=\"Electricity\" name=\"Electricity\" value=\"100.00\" />\
+               <input size=\"5\" type=\"text\" title=\"Electricity\" name=\"Electricity\" value=\"" + tenant.Electricity + "\"/>\
                </td>\
                <td class=\"tmplt-td\">\
-               <input size=\"5\" type=\"text\" title=\"Gas\" name=\"Gas\" value=\"100.00\" />\
+               <input size=\"5\" type=\"text\" title=\"Gas\" name=\"Gas\" value=\"" + tenant.Gas + "\"/>\
                </td>\
                <td class=\"tmplt-td\">\
-               <input size=\"5\" type=\"text\" title=\"Water\" name=\"Water\" value=\"100.00\" />\
+               <input size=\"5\" type=\"text\" title=\"Water\" name=\"Water\" value=\"" + tenant.Water + "\"/>\
                </td>\
                <td class=\"tmplt-td\">\
-               <input size=\"5\" type=\"text\" title=\"SewageTrashRecycle\" name=\"SewageTrashRecycle\" value=\"100.00\" />\
+               <input size=\"5\" type=\"text\" title=\"SewageTrashRecycle\" name=\"SewageTrashRecycle\" value=\"" + tenant.SewageTrashRecycle + "\"/>\
                </td>\
                <td class=\"tmplt-td\"></td>\
                <td class=\"tmplt-td\">\
-               <input size=\"14\" type=\"text\" title=\"Comments\" name=\"Comments\" />\
+               <input size=\"14\" type=\"text\" title=\"Comments\" name=\"Comments\" value=\"" + tenant.Comments + "\"/>\
                </td>\
                <td class=\"tmplt-td\">\
                " + txt + "\
@@ -72,7 +88,7 @@ return "<tr id=\"" + trId +"\">\
                tr.appendChild(td);
            }
            $("#rentroll-table").append(tr);
-           $("#rentroll-table").append(editTRHtml('tr-add', true));
+           $("#rentroll-table").append(editTRHtml('tr-add', 'add'));
        }
       </script>
       <span id="signinform">
