@@ -127,6 +127,7 @@ func main() {
 	http.HandleFunc("/index", indexHandler)
 	http.HandleFunc("/logerror", logErrorHandler)
 	http.HandleFunc("/oauth2callback", oauth2callback)
+	http.HandleFunc("/printinvoices", printInvoicesHandler)
 	http.HandleFunc("/rentroll", rentRollHandler)
 	http.HandleFunc("/rentrolltemplate", rentRollTemplateHandler)
 	http.HandleFunc("/settings", settingsHandler)
