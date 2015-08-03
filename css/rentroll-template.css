@@ -55,3 +55,14 @@ a.undo:link, a.undo:visited {
 a.undo:hover {
     text-decoration: underline;
 }
+
+a.invoices {
+    font-size: x-large;
+    color: dimgray;
+}
+a.invoices:link, a.invoices:visited {
+    text-decoration: none;
+}
+a.invoices:hover {
+    text-decoration: underline;
+}

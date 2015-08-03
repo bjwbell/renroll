@@ -197,3 +197,7 @@ function undoSaveTenant(tenantId) {
     oldTR.hidden = false;
     document.getElementById('undo').innerHTML = '';
 }
+
+function printInvoices() {
+    var dbName = $('#DbName').val();
+}
