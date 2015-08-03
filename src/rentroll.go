@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"html/template"
 	"strconv"
+	"strings"
 	"time"
 	"github.com/joiggama/money"
 )
@@ -67,6 +68,7 @@ type Tenant struct {
 	Gas string
 	Water string
 	SewageTrashRecycle string
+	Total string
 	Comments string
 }
 
@@ -89,6 +91,7 @@ func tenantsHandler(w http.ResponseWriter, r *http.Request) {
 			Gas: "0",
 			Water: "0",
 			SewageTrashRecycle: "0",
+			Total: "0",
 			Comments: ""}}
 	} else {
 		dbName := email
@@ -111,20 +114,38 @@ func tenantsHandler(w http.ResponseWriter, r *http.Request) {
 func formatCurrency(tenants map[int]Tenant) {
 	for id, _ := range tenants {
 		tenant := tenants[id]
+		tenant.Total = formatMoney(
+			strconv.FormatFloat(parseMoney(tenant.BaseRent) +
+				parseMoney(tenant.Electricity) +
+				parseMoney(tenant.Gas) +
+				parseMoney(tenant.Water) +
+				parseMoney(tenant.SewageTrashRecycle),'f', -1, 64))
+		
 		tenant.BaseRent = formatMoney(tenant.BaseRent)
 		tenant.Electricity = formatMoney(tenant.Electricity)
 		tenant.Gas = formatMoney(tenant.Gas)
 		tenant.Water = formatMoney(tenant.Water)
 		tenant.SewageTrashRecycle = formatMoney(tenant.SewageTrashRecycle)
+		
 		tenants[id] = tenant
 	}
 }
-
+func parseMoney(mon string) float64 {
+	mon = strings.Replace(mon, "$", "", -1)
+	mon = strings.Replace(mon, ",", "", -1)
+	val, err := strconv.ParseFloat(mon, 64)
+	if err != nil {
+		logError(fmt.Sprintf("formatMoney - can't parse money: %v", mon))
+		return -1
+	}
+	return val
+	
+}
 func formatMoney(mon string) string {
 	if mon == "" {
 		mon = "0"
 	}
-	val, err := strconv.ParseFloat(mon, 32)
+	val, err := strconv.ParseFloat(mon, 64)
 	if err != nil {
 		logError(fmt.Sprintf("formatMoney - can't parse money: %v", mon))
 		return ""

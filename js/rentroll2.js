@@ -133,12 +133,24 @@ function saveTenant(tenantId) {
     var dbName = $('#DbName').val();
     for (var i = 0; i < editTR.children.length - 1; i++) {
         var td = document.createElement('td');
+        var child = null;
         td.className = 'tmplt-td';
         if (editTR.children[i].children.length == 0) {
+            child = editTR.children[i];
+            if (child.getAttribute('total') === 'true') {
+                value = parseFloat(tenant['BaseRent']) +
+                    parseFloat(tenant['Electricity']) +
+                    parseFloat(tenant['Gas']) +
+                    parseFloat(tenant['Water']) +
+                    parseFloat(tenant['SewageTrashRecycle']);
+                tenant[child.name] = value;
+                value = formatMoney(value);
+                td.textContent = value;
+            }
             newTR.appendChild(td);
             continue;
         }
-        var child = editTR.children[i].children[0];
+        child = editTR.children[i].children[0];
         if (child.tagName !== 'INPUT') {
             newTR.appendChild(td);
             continue;
@@ -146,7 +158,7 @@ function saveTenant(tenantId) {
         tenant[child.name] = child.value;
         var value = child.value;
         
-        if (child.getAttribute('rent') !== null && child.getAttribute('rent') === 'true') {
+        if (child.getAttribute('rent') === 'true') {
             value = value.replace("$", "").replace(",", "");
             tenant[child.name] = value;
             value = formatMoney(value);

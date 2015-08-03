@@ -31,6 +31,7 @@
                    Gas: '100.00',
                    Water: '100.00',
                    SewageTrashRecycle: '100.00',
+                   Total: '1400.00',
                    Comments: ''};
            }
            
@@ -64,7 +65,7 @@ return "<tr id=\"" + trId +"\">\
                <td class=\"tmplt-td\">\
                <input size=\"5\" type=\"text\" title=\"SewageTrashRecycle\" rent=\"true\" name=\"SewageTrashRecycle\" value=\"" + tenant.SewageTrashRecycle + "\"/>\
                </td>\
-               <td class=\"tmplt-td\"></td>\
+               <td class=\"tmplt-td\" total=\"true\">" + tenant.Total + "</td>\
                <td class=\"tmplt-td\">\
                <input size=\"14\" type=\"text\" title=\"Comments\" name=\"Comments\" value=\"" + tenant.Comments + "\"/>\
                </td>\

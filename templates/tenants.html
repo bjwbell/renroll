@@ -30,7 +30,7 @@
         <td class="tmplt-td">{{.Gas}}</td>
         <td class="tmplt-td">{{.Water}}</td>
         <td class="tmplt-td">{{.SewageTrashRecycle}}</td>
-        <td class="tmplt-td">Total</td>
+        <td class="tmplt-td">{{.Total}}</td>
         <td class="tmplt-td">{{.Comments}}</td>
         <td class="tmplt-td"><a href="javascript:editTenant({{.Id}})">edit</a>, <a href="javascript:removeTenant({{.Id}})">remove</a></td>
     </tr>
@@ -46,7 +46,7 @@
         <td class="tmplt-td"><input type="text" size="5" rent="true" name="Gas" value="{{.Gas}}"/></td>
         <td class="tmplt-td"><input type="text" size="5" rent="true" name="Water" value="{{.Water}}"/></td>
         <td class="tmplt-td"><input type="text" size="5" rent="true" name="SewageTrashRecycle" value="{{.SewageTrashRecycle}}"/></td>
-        <td class="tmplt-td">Total</td>
+        <td class="tmplt-td" total="true"></td>
         <td class="tmplt-td"><input type="text" size="14" name="Comments" value="{{.Comments}}"/></td>
         <td class="tmplt-td"><a href="javascript:saveTenant({{.Id}})">save</a></td>
     </tr>
