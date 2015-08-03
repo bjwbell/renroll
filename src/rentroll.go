@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 	"github.com/joiggama/money"
+	"github.com/jung-kurt/gofpdf"
 )
 
 type RentRoll struct {
@@ -287,4 +288,10 @@ func undoUpdateTenantHandler(w http.ResponseWriter, r *http.Request) {
 
 func printInvoicesHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("printInvoicesTenantHandler - begin")
+	pdf := gofpdf.New("P", "in", "Letter", "")
+	pdf.AddPage()
+	pdf.SetFont("Arial", "B", 16)
+	pdf.Cell(40, 10, "Hello, world")
+	err := pdf.OutputFileAndClose("hello.pdf")
+	fmt.Println(err)
 }
