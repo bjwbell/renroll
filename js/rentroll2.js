@@ -149,6 +149,7 @@ function saveTenant(tenantId) {
         if (child.getAttribute('rent') !== null && child.getAttribute('rent') === 'true') {
             value = value.replace("$", "").replace(",", "");
             tenant[child.name] = value;
+            value = formatMoney(value);
         }
         td.textContent = value;
         newTR.appendChild(td);
