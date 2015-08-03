@@ -287,5 +287,4 @@ func undoUpdateTenantHandler(w http.ResponseWriter, r *http.Request) {
 
 func printInvoicesHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("printInvoicesTenantHandler - begin")
-	//tenantAction(w, r, dbUndoUpdateTenant)
 }

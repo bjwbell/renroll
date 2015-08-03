@@ -121,6 +121,7 @@ func settingsHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/about", aboutHandler)
+	http.HandleFunc("/addtenant", addTenantHandler)
 	http.HandleFunc("/auth/getemail", getGPlusEmailHandler)
 	http.HandleFunc("/contact", contactHandler)
 	http.HandleFunc("/createaccount", createAccountHandler)
@@ -128,17 +129,17 @@ func main() {
 	http.HandleFunc("/logerror", logErrorHandler)
 	http.HandleFunc("/oauth2callback", oauth2callback)
 	http.HandleFunc("/printinvoices", printInvoicesHandler)
+	http.HandleFunc("/removetenant", removeTenantHandler)
 	http.HandleFunc("/rentroll", rentRollHandler)
 	http.HandleFunc("/rentrolltemplate", rentRollTemplateHandler)
 	http.HandleFunc("/settings", settingsHandler)
 	http.HandleFunc("/signinform", signinFormHandler)
 	http.HandleFunc("/submit", submitHandler)
 	http.HandleFunc("/tenants", tenantsHandler)
-	http.HandleFunc("/addtenant", addTenantHandler)
 	http.HandleFunc("/updatetenant", updateTenantHandler)
-	http.HandleFunc("/undoupdatetenant", undoUpdateTenantHandler)
-	http.HandleFunc("/removetenant", removeTenantHandler)
 	http.HandleFunc("/undoremovetenant", undoRemoveTenantHandler)
+	http.HandleFunc("/undoupdatetenant", undoUpdateTenantHandler)
+
 	http.Handle("/", http.FileServer(http.Dir("./")))
 	if http.ListenAndServe(":80", nil) != nil {
 		panic(http.ListenAndServe(":8080", nil))
