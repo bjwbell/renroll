@@ -248,6 +248,15 @@ func dbReadTenants(dbName string) map[int]Tenant {
 	return tenants
 }
 
+func dbGetTenant(dbName string, tenantId int) Tenant {
+	tenants := dbReadTenants(dbName)
+	tenant, ok := tenants[tenantId]
+	if ok != true {
+		logError(fmt.Sprintf("Error getting tenantId: %v", tenantId))
+	}
+	return tenant
+}
+
 func dbRemovedTenantIds (dbName string) []int {
 	if !dbExists(dbName) {
 		logError("dbReadTenants: CREATING Database (" + dbName + ")")

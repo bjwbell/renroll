@@ -66,3 +66,13 @@ a.invoices:link, a.invoices:visited {
 a.invoices:hover {
     text-decoration: underline;
 }
+
+a.tenant {
+    color: dimgray;
+}
+a.tenant:link, a.tenant:visited {
+    text-decoration: none;
+}
+a.tenant:hover {
+    text-decoration: underline;
+}

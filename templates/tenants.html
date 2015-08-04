@@ -20,7 +20,7 @@
     </tr>
     {{range .Tenants}}
     <tr id="tr-{{.Id}}">
-        <td class="tmplt-td">{{.Name}}</td>
+        <td class="tmplt-td"><a class="tenant" href="/tenant?id={{.Id}}">{{.Name}} (#{{.Id}})</a></td>
         <td class="tmplt-td">{{.Address}}</td>
         <td class="tmplt-td">{{.SqFt}}</td>
         <td class="tmplt-td">{{.LeaseStartDate}}</td>
