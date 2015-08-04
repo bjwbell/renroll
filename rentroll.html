@@ -10,6 +10,7 @@
       <span id="notloggedin-callback"
             callback="rentRollNotLoggedIn">            
       </span>
+      <script src="js/tenant.js"></script>
       <script src="js/rentroll2.js"></script>
       <script>
        function editTRHtml(trId, trType, tenantId, tenant) {
@@ -108,10 +109,6 @@ return "<tr id=\"" + trId +"\">\
               <br>
           </table>
           </form>
-          <br>
-          <a class="invoices" href="javascript:printInvoices()">Print Invoices</a>
-          <br>
-          <br>
       </div>
       {{template "Bottombar"}}
   </body>
