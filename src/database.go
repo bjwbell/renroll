@@ -248,7 +248,7 @@ func dbReadTenants(dbName string) map[int]Tenant {
 	return tenants
 }
 
-func dbGetTenant(dbName string, tenantId int) Tenant {
+func dbReadTenant(dbName string, tenantId int) Tenant {
 	tenants := dbReadTenants(dbName)
 	tenant, ok := tenants[tenantId]
 	if ok != true {

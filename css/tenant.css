@@ -1,0 +1,10 @@
+a.tenantlist {
+    font-size: x-large;
+    color: dimgray;
+}
+a.tenantlist:link, a.tenantlist:visited {
+    text-decoration: none;
+}
+a.tenantlist:hover {
+    text-decoration: underline;
+}

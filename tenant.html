@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <title>Renroll - Tenant</title>
+    {{template "Header" .}}
+    <link rel="stylesheet" type="text/css" href="css/tenant.css" />
+    <link rel="stylesheet" type="text/css" href="css/rentroll-template.css" />
+  </head>
+  <body>
+      {{template "Topbar" . }}
+      <span id="notloggedin-callback"
+            callback="tenantNotLoggedIn">            
+      </span>
+      <script src="js/tenant.js"></script>
+      <span id="signinform">
+      </span>
+      <div class="body-content">
+          <h1>Tenant</h1>
+          <span id="tenant" />
+          <span id="tenant-list" /> 
+      </div>
+      {{template "Bottombar"}}
+  </body>
+</html>
