@@ -64,18 +64,33 @@ function rentRollTableHeader() {
     </tr>'
 }
 
-function populateTenant(email, tenantId) {
+function populateTenant(dbName, tenantId) {
     var html = '<table class="rentroll-table">';
     html += rentRollTableHeader();
-    var dbName = document.getElementById("DbName");
-    if (dbName !== null) {
-        dbName.value = email;
-    }
-    getTenantTR(email, tenantId, function (tenant, TRhtml) {
+    getTenantTR(dbName, tenantId, function (tenant, TRhtml) {
         html += TRhtml;
         html += "</table>";
         html += "<br><br>";
         $("#tenant").append(html);
+    });
+    getTenantHistory(dbName, tenantId, function (history) {
+        var html = '<ul>';
+        for (var i = 0; i < history.length; i++) {
+            html += '<li>' + history[i] + '</li>';
+        }
+        html += "</ul>";
+        $("#tenant-history").append(html);
+    });
+}
+
+function getTenantHistory(dbName, tenantId, callback) {
+    $.ajax({
+        url: '/tenanthistory',
+        dataType: 'json',
+        data: { 'DbName': dbName, 'TenantId': tenantId },
+        success: function (history) {
+            callback(history);
+        }
     });
 }
 

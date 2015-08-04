@@ -55,3 +55,15 @@ func tenantsDataHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Write(bytes)
 }
+
+func tenantHistoryHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("tenantHistoryHandler - begin")
+	dbName := r.FormValue("DbName")
+	tenantId, _ := strconv.Atoi(r.FormValue("TenantId"))
+	actions := dbTenantHistory(dbName, tenantId)
+	bytes, err := json.Marshal(actions)
+	if err != nil {
+		logError(fmt.Sprintf("Error serializing tenant history to json, ERR: %v", err))
+	}
+	w.Write(bytes)
+}

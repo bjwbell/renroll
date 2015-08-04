@@ -257,6 +257,80 @@ func dbReadTenant(dbName string, tenantId int) Tenant {
 	return tenant
 }
 
+func dbTenantHistory(dbName string, tenantId int) []string {
+	if !dbExists(dbName) {
+		logError("dbReadTenants: CREATING Database (" + dbName + ")")
+		dbCreate(dbName)
+	}
+	db, err := sql.Open("sqlite3", "./" + dbName + ".sqlite")
+	if err != nil {
+		logError("Couldn't read database (" + dbName + ")")
+		log.Fatal(err)
+	}
+	defer db.Close()
+	rows, err := db.Query(`select
+                               Action, ActionTimeStamp,
+                               Name text, Address text, SqFt integer,
+                               LeaseStartDate text, LeaseEndDate text,
+                               BaseRent text, Electricity text, Gas text, Water text, SewageTrashRecycle text,
+                               Comments text
+                               from tenants where
+                               ActionTenantId =` + strconv.Itoa(tenantId))
+	if err != nil {
+		logError("Couldn't query database (" + dbName + ")")
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	actions := []string{}
+	for rows.Next() {
+		var action, timeStamp string
+		var SqFt int
+		var Name,
+		Address,
+		LeaseStartDate,
+		LeaseEndDate,
+		BaseRent,
+		Electricity,
+		Gas,
+		Water,
+		SewageTrashRecycle,
+		Comments string
+
+		rows.Scan(
+			&action,
+			&timeStamp,
+			&Name,
+			&Address,
+			&SqFt,
+			&LeaseStartDate,
+			&LeaseEndDate,
+			&BaseRent,
+			&Electricity,
+			&Gas,
+			&Water,
+			&SewageTrashRecycle,
+			&Comments)
+
+		tenant := Tenant{
+			Id: tenantId,
+			DbName: dbName,
+			Name: Name,
+			Address: Address,
+			SqFt: SqFt,
+			LeaseStartDate: LeaseStartDate,
+			LeaseEndDate: LeaseEndDate,
+			BaseRent: BaseRent,
+			Electricity: Electricity,
+			Gas: Gas,
+			Water: Water,
+			SewageTrashRecycle: SewageTrashRecycle,
+			Comments: Comments}
+		var txt = fmt.Sprintf("action: %v, timestamp: %v, values: %v", action, timeStamp, tenant)
+		actions = append(actions, txt)
+	}
+	return actions
+}
+
 func dbRemovedTenantIds (dbName string) []int {
 	if !dbExists(dbName) {
 		logError("dbReadTenants: CREATING Database (" + dbName + ")")

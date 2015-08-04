@@ -126,6 +126,7 @@ func main() {
 	http.HandleFunc("/contact", contactHandler)
 	http.HandleFunc("/createaccount", createAccountHandler)
 	http.HandleFunc("/tenantdata", tenantDataHandler)
+	http.HandleFunc("/tenanthistory", tenantHistoryHandler)
 	http.HandleFunc("/tenantsdata", tenantsDataHandler)
 	http.HandleFunc("/index", indexHandler)
 	http.HandleFunc("/logerror", logErrorHandler)
