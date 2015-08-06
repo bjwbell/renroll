@@ -12,6 +12,20 @@
             callback="tenantNotLoggedIn">            
       </span>
       <script src="js/tenant.js"></script>
+      <script>
+       $(document).ready(function() {
+           $("#tenant-history").hide();
+           //toggle the componenet with class msg_body
+           $("#history-heading").click(function()
+               {
+                   $(this).next("#tenant-history").slideToggle(500);
+               });
+           $("#tenant-heading").click(function()
+               {
+                   $(this).next("#tenant").slideToggle(500);
+               });
+       });
+      </script>
       <span id="signinform">
       </span>
       <div class="body-content">
@@ -20,8 +34,13 @@
           <br>
           <div id="undo" class="undo"></div>
           <br>
-          <span id="tenant"></span>
-          <span id="tenant-history"></span>
+          <div id="tenant-heading" class="heading">Tenant Details</div>
+          <span id="tenant" class="tenant-content"></span>
+          <div id="spacer1" class="spacer"></div>
+          <div id="history-heading" class="heading">History</div>
+          <div id="tenant-history" class="tenant-content"></div>
+          <div id="spacer2" class="spacer"></div>
+          <br>
           <span id="tenant-list"></span>
       </div>
       {{template "Bottombar"}}

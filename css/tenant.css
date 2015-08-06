@@ -8,3 +8,21 @@ a.tenantlist:link, a.tenantlist:visited {
 a.tenantlist:hover {
     text-decoration: underline;
 }
+
+.heading {
+    margin: 1px;
+    padding: 3px 10px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px #888888;
+    cursor: pointer;
+    position: relative;
+    background-color:lightgray;
+}
+
+table.tenant-table {
+    margin:5px 5px 5px 5px;
+}
+
+.spacer {
+    margin:0px 0px 10px 0px;
+}

@@ -65,12 +65,11 @@ function rentRollTableHeader() {
 }
 
 function populateTenant(dbName, tenantId) {
-    var html = '<table class="rentroll-table">';
+    var html = '<table class="rentroll-table tenant-table">';
     html += rentRollTableHeader();
     getTenantTR(dbName, tenantId, function (tenant, TRhtml) {
         html += TRhtml;
         html += "</table>";
-        html += "<br><br>";
         $("#tenant").append(html);
     });
     getTenantHistory(dbName, tenantId, function (history) {
