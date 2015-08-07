@@ -12,6 +12,8 @@ function populate(email) {
     }
     tenantId = get('id');
     if (tenantId !== '') {
+        $("#tenant-heading").show();
+        $("#history-heading").show();
         populateTenant(email, tenantId);
     } else {
         listTenants(email);
@@ -75,7 +77,12 @@ function populateTenant(dbName, tenantId) {
     getTenantHistory(dbName, tenantId, function (history) {
         var html = '<ul>';
         for (var i = 0; i < history.length; i++) {
-            html += '<li>' + history[i] + '</li>';
+            html += '<li>';
+            html += '<dl>';
+            html += '<dt>Action - ' + history[i]['action'] + '</dt>';
+            html += '<dd>' + history[i]['values'] + '</dd>';
+            html += '</dl>';
+            html += '</li>';
         }
         html += "</ul>";
         $("#tenant-history").append(html);

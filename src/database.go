@@ -257,7 +257,7 @@ func dbReadTenant(dbName string, tenantId int) Tenant {
 	return tenant
 }
 
-func dbTenantHistory(dbName string, tenantId int) []string {
+func dbTenantHistory(dbName string, tenantId int) []map[string]string {
 	if !dbExists(dbName) {
 		logError("dbReadTenants: CREATING Database (" + dbName + ")")
 		dbCreate(dbName)
@@ -281,7 +281,7 @@ func dbTenantHistory(dbName string, tenantId int) []string {
 		log.Fatal(err)
 	}
 	defer rows.Close()
-	actions := []string{}
+	actions := []map[string]string{}
 	for rows.Next() {
 		var action, timeStamp string
 		var SqFt int
@@ -325,8 +325,13 @@ func dbTenantHistory(dbName string, tenantId int) []string {
 			Water: Water,
 			SewageTrashRecycle: SewageTrashRecycle,
 			Comments: Comments}
-		var txt = fmt.Sprintf("action: %v, timestamp: %v, values: %v", action, timeStamp, tenant)
-		actions = append(actions, txt)
+		var txt = fmt.Sprintf("timestamp: %v, values: %v", action, timeStamp, tenant)
+		var act = fmt.Sprintf("%v", action)
+		var item = map[string]string {
+			"action": act,
+			"values": txt,
+		}
+		actions = append(actions, item)
 	}
 	return actions
 }
