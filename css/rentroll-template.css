@@ -13,7 +13,7 @@
 }
 
 
-.tmplt-th {
+.default-th {
     border:0px dotted black;
 }
 
@@ -33,7 +33,7 @@
 }
 
 
-.tmplt-td {
+.default-td {
     border:1px solid black;
 }
 

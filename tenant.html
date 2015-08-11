@@ -12,6 +12,8 @@
             callback="tenantNotLoggedIn">            
       </span>
       <script src="js/tenant.js"></script>
+      <script src="js/tenantutil.js"></script>
+      <script src="js/tenanthistory.js"></script>
       <script>
        $(document).ready(function() {
            $("#tenant-history").hide();
@@ -32,9 +34,7 @@
           <h1>Tenant</h1>
           <span id="tenant-list"></span>
           <input type="hidden" name="DbName" id="DbName" value="DbName" />
-          <br>
           <div id="undo" class="undo"></div>
-          <br>
           <div id="tenant-heading" class="heading" hidden="true">Tenant Details</div>
           <span id="tenant" class="tenant-content"></span>
           <div id="spacer1" class="spacer"></div>

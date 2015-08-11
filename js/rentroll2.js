@@ -46,41 +46,27 @@ function addTenant() {
     var tr = $("#rentroll-table tr:last");
     var tenant = { };
     var lastTr = $("#rentroll-table tr:nth-last-child(2)");
-    var newTr = document.createElement('tr');
     var dbName = $('#DbName').val();
     for (var i = 0; i < tr.children().length - 1; i++) {
-        var td = document.createElement('td');
-        td.className = 'tmplt-td';
         if (tr.children()[i].children.length == 0) {
-            newTr.appendChild(td);
             continue;
         }
         child = tr.children()[i].children[0];
         if (child.tagName !== 'INPUT') {
-            newTr.appendChild(td);
             continue;
         }
         tenant[child.name] = child.value;
-        var value = child.value;
-        if (value === parseFloat(value).toFixed(2)) {
-            value = parseFloat(value).toFixed(2);
-            value = formatMoney(value);
-        }
-        td.textContent = value;
-        newTr.appendChild(td);
     }
     tenant['DbName'] = dbName;
     $.ajax({
         url: '/addtenant',
         data: tenant,
         success: function (tenantId) {
-            newTr.id = 'tr-' + tenantId;
-            var td = document.createElement('td');
-            td.className = 'tmplt-td';
-            td.innerHTML = tenantActionsHtml(tenantId);
-            newTr.appendChild(td);
-            lastTr.before(newTr);
-            var editTr = editTRHtml('tr-edit-' + tenantId, 'edit', tenantId, tenant);
+            tenant['Id'] = tenantId;
+            tenant['Total'] = tenantTotalRent(tenant);
+            var editTr = tenantEditTRHtml(tenant, true, true);
+            var newTrHtml = tenantTRHtml(tenant, true, true);
+            lastTr.before(newTrHtml);
             lastTr.before(editTr);
             editTr = document.getElementById('tr-edit-' + tenantId);
             editTr.hidden = true;

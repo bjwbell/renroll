@@ -143,7 +143,7 @@ func dbUpdate(dbName string, tenantId int, tenantName, address string, sqft int,
 		return false
 	}
 	defer stmt.Close()
-	var timestamp = time.Now()
+	var timestamp = time.Now().Format("2006-01-02 15:04:05.000000000")
 	_, err = stmt.Exec(nil, ActionUpdate, tenantId, timestamp, tenantName, address, sqft, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments)
 	if err != nil {
 		logError("Couldn't exec update insert in database (" + dbName + ")" +
@@ -257,7 +257,14 @@ func dbReadTenant(dbName string, tenantId int) Tenant {
 	return tenant
 }
 
-func dbTenantHistory(dbName string, tenantId int) []map[string]string {
+type TenantHistoryItem struct {
+	Action string
+        DateTime string
+	HasValues bool
+	TenantValues Tenant
+}
+
+func dbTenantHistory(dbName string, tenantId int) []TenantHistoryItem {
 	if !dbExists(dbName) {
 		logError("dbReadTenants: CREATING Database (" + dbName + ")")
 		dbCreate(dbName)
@@ -275,13 +282,13 @@ func dbTenantHistory(dbName string, tenantId int) []map[string]string {
                                BaseRent text, Electricity text, Gas text, Water text, SewageTrashRecycle text,
                                Comments text
                                from tenants where
-                               ActionTenantId =` + strconv.Itoa(tenantId))
+                               ActionTenantId =` + strconv.Itoa(tenantId) + ` OR (Id = ` + strconv.Itoa(tenantId) + ` AND Action='` + ActionInsert + `')`)
 	if err != nil {
 		logError("Couldn't query database (" + dbName + ")")
 		log.Fatal(err)
 	}
 	defer rows.Close()
-	actions := []map[string]string{}
+	actions := []TenantHistoryItem{};//map[string]string{}
 	for rows.Next() {
 		var action, timeStamp string
 		var SqFt int
@@ -325,13 +332,21 @@ func dbTenantHistory(dbName string, tenantId int) []map[string]string {
 			Water: Water,
 			SewageTrashRecycle: SewageTrashRecycle,
 			Comments: Comments}
-		var txt = fmt.Sprintf("timestamp: %v, values: %v", action, timeStamp, tenant)
-		var act = fmt.Sprintf("%v", action)
-		var item = map[string]string {
-			"action": act,
-			"values": txt,
+		t, err := time.Parse("2006-01-02 15:04:05.000000000", timeStamp)
+		if err != nil {
+			fmt.Println("Error:")
+			fmt.Println(err)
+			logError(fmt.Sprintf("tenantHistory - cant parse (timestamp, err): (%v, %v)", timeStamp, err))
 		}
-		actions = append(actions, item)
+		dateTime := t.Format("1/2/2006 3:04pm")
+		act := fmt.Sprintf("%v", action)
+		hasValues := !(act == ActionUndoUpdate || act == ActionUndoRemove)
+		historyItem := TenantHistoryItem {
+			DateTime: dateTime,
+			Action: act,
+			HasValues: hasValues,
+			TenantValues: tenant};
+		actions = append(actions, historyItem)
 	}
 	return actions
 }
@@ -518,7 +533,7 @@ func dbUndoRemoveTenant(dbName string, tenantId int) bool {
 }
 
 func dbUndoUpdateTenant(dbName string, tenantId int) bool {
-	log.Print("dbUndoRemoveTenant")
+	log.Print("dbUndoUpdateTenant")
 	return dbTenantAction(dbName, ActionUndoUpdate, ActionUpdate, tenantId)
 }
 
