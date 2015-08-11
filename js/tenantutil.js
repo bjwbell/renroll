@@ -55,7 +55,7 @@ function formatTenant(tenant) {
     var total = tenantTotalRent(tenant);    
     var t = {};
     var fields = tenantFields();
-    t['Total'] = total;
+    tenant['Total'] = total;
     for (var i = 0; i < tenantFields().length; i += 1) {
         t[fields[i]] = formatField(fields[i], tenant[fields[i]]);
     }
