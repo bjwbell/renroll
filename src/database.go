@@ -176,7 +176,7 @@ func dbReadTenants(dbName string) map[int]Tenant {
                                Name, Address, SqFt,
                                LeaseStartDate, LeaseEndDate,
                                BaseRent, Electricity, Gas, Water, SewageTrashRecycle,
-                               Comments  from tenants where Action='insert' and ActionTenantId is null Order By id`)
+                               Comments  from tenants Order By id where Action='` + ActionInsert + `' and ActionTenantId is null`)
 	if err != nil {
 		logError("Couldn't query database (" + dbName + ")")
 		log.Fatal(err)
@@ -578,7 +578,7 @@ func dbTenantAction(dbName string, action string, prevAction string, tenantId in
 		return false
 	}
 	defer stmt.Close()
-	var timestamp = time.Now()
+	var timestamp = time.Now().Format("2006-01-02 15:04:05.000000000")
 	_, err = stmt.Exec(nil, action, tenantId, prevActionRowId, timestamp)
 	if err != nil {
 		logError("Couldn't exec remove tenant in database (" +
