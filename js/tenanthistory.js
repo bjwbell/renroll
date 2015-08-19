@@ -10,32 +10,31 @@ function populateTenantHistory(tenantId) {
 
 function formatTenantHistory(history) {
     var html = '<table class="rentroll-table tenant-table">';
-        html += '<tr>';
-        html += '<th clss="default-th">Date/Time</th>';
-        html += '<th clss="default-th">Action</th>';
+    html += '<tr>';
+    html += '<th clss="default-th">Date/Time</th>';
+    html += '<th clss="default-th">Action</th>';
     html += tableTenantColsHeader(false);
-        html += '</tr>';
-        var prevTenantValues = null;
-        for (var i = 0; i < history.length; i++) {
-            html += '<tr>';
-            html += '<td class="default-td">';
-            html += history[i]['DateTime'];
-            html += '</td>'
-            html += '<td class="default-td">';
-            html += history[i]['Action'];
-            html += '</td>';
-            if (history[i]['HasValues'] === true) {
-                if (prevTenantValues !== null) {
-                    html += tenantTDHtml(diffTenant(prevTenantValues, history[i]['TenantValues']), false);
-                } else {
-                    html += tenantTDHtml(history[i]['TenantValues'], false);
-                }
-                prevTenantValues = history[i]['TenantValues'];
+    html += '</tr>';
+    var prevTenantValues = null;
+    for (var i = 0; i < history.length; i++) {
+        html += '<tr>';
+        html += '<td class="default-td">';
+        html += history[i]['DateTime'];
+        html += '</td>'
+        html += '<td class="default-td">';
+        html += history[i]['Action'];
+        html += '</td>';
+        if (history[i]['HasValues'] === true) {
+            if (prevTenantValues !== null) {
+                html += tenantTDHtml(diffTenant(prevTenantValues, history[i]['TenantValues']), false);
+            } else {
+                html += tenantTDHtml(history[i]['TenantValues'], false);
             }
-            html += '</tr>';
-            
+            prevTenantValues = history[i]['TenantValues'];
         }
-        html += '</table>';
+        html += '</tr>';
+    }
+    html += '</table>';
     return html;
 }
 
