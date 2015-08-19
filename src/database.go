@@ -176,7 +176,7 @@ func dbReadTenants(dbName string) map[int]Tenant {
                                Name, Address, SqFt,
                                LeaseStartDate, LeaseEndDate,
                                BaseRent, Electricity, Gas, Water, SewageTrashRecycle,
-                               Comments  from tenants where Action='insert' and ActionTenantId is null`)
+                               Comments  from tenants where Action='insert' and ActionTenantId is null Order By id`)
 	if err != nil {
 		logError("Couldn't query database (" + dbName + ")")
 		log.Fatal(err)
