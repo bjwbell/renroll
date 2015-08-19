@@ -108,7 +108,7 @@ function tenantSaveHtml(tenantId, canRemove, includeLink) {
     if (includeLink === true) {
         link = 'true';
     }
-    return '<a href="javascript:saveTenant(' + tenantId + ', ' + remove + ', ' + link + ')">save</a>';
+    return '<a href="javascript:cancelEditTenant(' + tenantId + ')">cancel</a>,' + '<a href="javascript:saveTenant(' + tenantId + ', ' + remove + ', ' + link + ')">save</a>';
 }
 
 function tenantTRHtml(tenant, includeRemove, includeLink) {

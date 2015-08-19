@@ -48,7 +48,7 @@
         <td class="default-td"><input type="text" size="5" rent="true" name="SewageTrashRecycle" value="{{.SewageTrashRecycle}}"/></td>
         <td class="default-td" total="true"></td>
         <td class="default-td"><input type="text" size="14" name="Comments" value="{{.Comments}}"/></td>
-        <td class="default-td"><a href="javascript:saveTenant({{.Id}}, true, true)">save</a></td>
+        <td class="default-td"><a href="javascript:cancelEditTenant({{.Id}})">cancel</a>, <a href="javascript:saveTenant({{.Id}}, true, true)">save</a></td>
     </tr>
     {{end}}
 </table>

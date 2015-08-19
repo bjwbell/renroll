@@ -73,15 +73,34 @@ function getTenant(dbName, tenantId, callback) {
     });
 }
 
-function editTenant(tenantId) {
+function getTenantTrAndEditTr(tenantId) {
     var tr = document.getElementById("tr-" + tenantId);
     var editTR = document.getElementById("tr-edit-" + tenantId);
     if (tr === null || editTR === null) {
         logError("editTenant - no TR!");
+        return null;
+    }
+    return {'tr': tr, 'editTr': editTR};
+}
+
+function editTenant(tenantId) {
+    var trs = getTenantTrAndEditTr(tenantId);
+    if (trs === null) {
+        logError("editTenant - no TR!");
         return;
     }
-    tr.hidden = true;
-    editTR.hidden = false;
+    trs['tr'].hidden = true;
+    trs['editTr'].hidden = false;
+}
+
+function cancelEditTenant(tenantId) {
+    var trs = getTenantTrAndEditTr(tenantId);
+    if (trs === null) {
+        logError("editTenant - no TR!");
+        return;
+    }
+    trs['editTr'].hidden = true;
+    trs['tr'].hidden = false;
 }
 
 var oldTR = null;

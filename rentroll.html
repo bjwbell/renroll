@@ -20,7 +20,7 @@
            if (trType === 'normal') {
                txt = tenantActionsHtml(tenantId);
            } else if (trType === 'edit') {
-               txt = '<a href="javascript:saveTenant(' + tenantId + ')">save</a>';
+               txt = tenantSaveHtml(tenantId, true, true);
            }
            if (tenant === null || tenant === undefined) {
                tenant = {
