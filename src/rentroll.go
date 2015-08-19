@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"html/template"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -73,6 +74,12 @@ type Tenant struct {
 	Comments string
 }
 
+type ByTenantId []Tenant
+
+func (t ByTenantId) Len() int           { return len(t) }
+func (t ByTenantId) Swap(i, j int)      { t[i], t[j] = t[j], t[i] }
+func (t ByTenantId) Less(i, j int) bool { return t[i].Id < t[j].Id }
+
 func tenantsHandler(w http.ResponseWriter, r *http.Request) {
 	tenants := map[int]Tenant{}
 	log.Print("tenantshandler - begin")
@@ -105,6 +112,7 @@ func tenantsHandler(w http.ResponseWriter, r *http.Request) {
 	for _, tenant := range tenants {
 		tenants1 = append(tenants1, tenant)
 	}
+	sort.Sort(ByTenantId(tenants1))
 	tenantsTemplate := TenantsTemplate{
 		Conf: configuration(),
 		Tenants: tenants1,
