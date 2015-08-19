@@ -174,7 +174,7 @@ function listTenants(email) {
             for (var tenantId in tenants) {
                 var tenant = tenants[tenantId];
                 var tenantHtml = '<a class="tenantlist" href="/tenant?id=' + tenantId + '">' +
-                    tenant.Name + ' (#' + tenantId + ')</a>';
+                    formattedTenantName(tenant) + '</a>';
                 
                 listHtml = listHtml + '<li>' + tenantHtml + '</li>';
             }

@@ -62,12 +62,16 @@ function formatTenant(tenant) {
     return t;
 }
 
+function formattedTenantName(tenant) {
+    return tenant.Name + ' (#' + tenant.Id + ')';
+}
+
 
 function tenantTDHtml(tenant, includeAction, includeRemove, includeLink) {
     var tdHtml = '';
-    var name = tenant.Name;
+    var name = formattedTenantName(tenant);
     if (includeLink === true) {
-        name = '<a class="tenant" href="/tenant?id=' + tenant.Id + '">' + tenant.Name + ' (#' + tenant.Id + ')</a>';
+        name = '<a class="tenant" href="/tenant?id=' + tenant.Id + '">' + name + ')</a>';
     }
     tdHtml += '<td class="default-td">' + name + '</td>';
     tdHtml += '<td class="default-td">' + tenant.Address + '</td>';

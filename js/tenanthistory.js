@@ -54,9 +54,6 @@ function diffTenant(t1, t2) {
 
     for (var i = 0; i < tenantFields().length; i++) {
         fieldName = tenantFields()[i];
-        if (fieldName === 'Id') {
-            continue;
-        }
         d = diffValue(prev[fieldName], curr[fieldName]);
         if (isMoneyField(fieldName) && d === '""') {
             d = '<span class="small-diff-value">' + curr[fieldName] + '</span>';
