@@ -28,7 +28,7 @@ function formatTenantHistory(history) {
             if (prevTenantValues !== null) {
                 html += tenantTDHtml(diffTenant(prevTenantValues, history[i]['TenantValues']), false);
             } else {
-                html += tenantTDHtml(history[i]['TenantValues'], false);
+                html += tenantTDHtml(formatTenant(history[i]['TenantValues']), false);
             }
             prevTenantValues = history[i]['TenantValues'];
         }
@@ -38,21 +38,28 @@ function formatTenantHistory(history) {
     return html;
 }
 
-function diffValue(field, val1, val2) {
-    if (val1 !== val2) {
-        return '<b>' + formatField(field, val2) + '</b>';
+function diffValue(prev, curr) {
+    if (prev !== curr) {
+        return '<b>' + curr + '</b>';
     } 
     return '""';
 }
 
 function diffTenant(t1, t2) {
-    t1.Total = tenantTotalRent(t1);
-    t2.Total = tenantTotalRent(t2);
     var diff = {};
-    for (var fieldName in t1) {
-        var d = diffValue(fieldName, t1[fieldName], t2[fieldName]);
+    var fieldName = '';
+    var d = '';
+    prev = formatTenant(t1);
+    curr = formatTenant(t2);
+
+    for (var i = 0; i < tenantFields().length; i++) {
+        fieldName = tenantFields()[i];
+        if (fieldName === 'Id') {
+            continue;
+        }
+        d = diffValue(prev[fieldName], curr[fieldName]);
         if (isMoneyField(fieldName) && d === '""') {
-            d = '<span class="small-diff-value">' + formatField(fieldName, t2[fieldName]) + '</span>';
+            d = '<span class="small-diff-value">' + curr[fieldName] + '</span>';
         }
         diff[fieldName] = d;
     }
