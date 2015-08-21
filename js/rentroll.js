@@ -117,4 +117,5 @@ function addTenant() {
 
 function printInvoices() {
     var dbName = $('#DbName').val();
+    window.location.href = '/printinvoices?DbName=' + dbName;
 }

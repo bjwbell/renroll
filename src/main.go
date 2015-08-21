@@ -71,7 +71,7 @@ func logError(error string) {
 	runtime.Stack(buf, true)
 	trace := fmt.Sprintf("%s", buf)
 	msg := "Go Error\r\nError Message: " + error + "\r\n\r\nStack Trace:\r\n" + trace
-	log.Print(error)
+	log.Print("logError:\n" + error)
 	sendAdminEmail(configuration().GmailAddress, "Renroll Go Error", msg)
 }
 
