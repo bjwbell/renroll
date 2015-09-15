@@ -1,2 +1,2 @@
-default: src/*.go
-	cd src; go build -o ../renroll
+default: src/renroll/*.go src/main/*.go
+	go build -i -o ./renroll src/main/main.go

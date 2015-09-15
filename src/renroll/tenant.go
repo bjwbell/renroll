@@ -1,4 +1,4 @@
-package main
+package renroll
 import (
 	"encoding/json"
 	"fmt"
@@ -13,9 +13,9 @@ type TenantTemplate struct {
 
 }
 
-func tenantHandler(w http.ResponseWriter, r *http.Request) {
+func TenantHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("tenantHandler - begin")
-	conf := configuration()
+	conf := Config()
 	conf.GPlusSigninCallback = "gTenant"
 	conf.FacebookSigninCallback = "fbTenant"
 	tenant := TenantTemplate {
@@ -30,7 +30,7 @@ func tenantHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, tenant)
 }
 
-func tenantDataHandler(w http.ResponseWriter, r *http.Request) {
+func TenantDataHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("tenantDataHandler - begin")
 	dbName := r.FormValue("DbName")
 	tenantId, _ := strconv.Atoi(r.FormValue("TenantId"))
@@ -42,7 +42,7 @@ func tenantDataHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(bytes)
 }
 
-func tenantsDataHandler(w http.ResponseWriter, r *http.Request) {
+func TenantsDataHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("tenanstDataHandler - begin")
 	dbName := r.FormValue("DbName")
 	tenants := map[string]Tenant{ }
@@ -56,7 +56,7 @@ func tenantsDataHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(bytes)
 }
 
-func tenantHistoryHandler(w http.ResponseWriter, r *http.Request) {
+func TenantHistoryHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("tenantHistoryHandler - begin")
 	dbName := r.FormValue("DbName")
 	tenantId, _ := strconv.Atoi(r.FormValue("TenantId"))

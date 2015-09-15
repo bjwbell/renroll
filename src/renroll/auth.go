@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package main
+package renroll
 import (
 	"fmt"
 	"encoding/json"
@@ -16,7 +16,7 @@ import (
 )
 
 func googleOAuth2Config() *oauth2.Config {
-	appConf := configuration()
+	appConf := Config()
 	conf := &oauth2.Config{
  		ClientID:     appConf.GoogleClientId,
 		ClientSecret: appConf.GoogleClientSecret,
@@ -41,7 +41,7 @@ func readHttpBody(response *http.Response) string {
  	return str
  }
 
-func oauth2callback(w http.ResponseWriter, r *http.Request) {
+func Oauth2callback(w http.ResponseWriter, r *http.Request) {
 	code := r.FormValue("code")
 	if code == "" {
 		log.Print("oauth2callback - NO CODE")
@@ -51,14 +51,14 @@ func oauth2callback(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Print("oauth2callback - url: " + r.URL.RawQuery)
 	log.Print("oauth2callback - code: " + code)
-	
+
 	newAccount := r.FormValue("new_account")
 	//email := getGPlusEmail(code)
 	token := getGPlusToken(r)
 	email := getGPlusEmail(token)
 	if newAccount == "true" {
 		log.Print("oauth2callback - NEW ACCOUNT")
-		interestedUser(email, "oauth2callback")
+		InterestedUser(email, "oauth2callback")
 		dbCreate(email)
 		dbInsert(email, "#1", "", 0, "", "", "", "", "", "", "", "")
 	}
@@ -106,24 +106,24 @@ func getGPlusEmail(tok oauth2.Token) string {
 	for _, v := range m.Emails {
 		log.Print("getemail - email (value, type): " + v.Value + ", " + v.Type)
 	}
-	
+
 	email := "dummy@dummy.com"
 	if len(m.Emails) != 1 {
 		log.Print("getemail - NO VALID EMAIL OR TOO MANY")
-		
-	} else {	
+
+	} else {
 		email = m.Emails[0].Value
 	}
 	return email
 }
 
-func getGPlusEmailHandler(w http.ResponseWriter, r *http.Request) {
+func GetGPlusEmailHandler(w http.ResponseWriter, r *http.Request) {
 	email := getGPlusEmail(getGPlusToken(r))
 	w.Write([]byte(email))
 }
 
 
-func createAccountHandler(w http.ResponseWriter, r *http.Request) {
+func CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	loginMethod := r.FormValue("loginmethod")
 	if email == "" {
@@ -133,7 +133,7 @@ func createAccountHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Printf("createAccountHandler - NEW ACCOUNT: %s", email)
-	interestedUser(email, loginMethod)
+	InterestedUser(email, loginMethod)
 	dbCreate(email)
 	dbInsert(email, "#1", "", 0, "", "", "", "", "", "", "", "")
 	success := "true"
@@ -145,9 +145,9 @@ type SigninForm struct {
 	Conf Configuration
 }
 
-func signinFormHandler(w http.ResponseWriter, r *http.Request) {
+func SigninFormHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("signinform - begin")
 	t, _ := template.ParseFiles("templates/signinform.html")
 	log.Print("signinform - execute")
-	t.Execute(w, SigninForm{Conf: configuration()})
+	t.Execute(w, SigninForm{Conf: Config()})
 }

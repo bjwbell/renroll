@@ -1,4 +1,4 @@
-package main
+package renroll
 import (
 	"fmt"
 	"io/ioutil"
@@ -23,9 +23,9 @@ type RentRoll struct {
 
 }
 
-func rentRollHandler(w http.ResponseWriter, r *http.Request) {
+func RentRollHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("rentrollhandler - begin")
-	conf := configuration()
+	conf := Config()
 	conf.GPlusSigninCallback = "gRentRoll"
 	conf.FacebookSigninCallback = "fbRentRoll"
 	month := time.Now().Month()
@@ -81,7 +81,7 @@ func (t ByTenantId) Len() int           { return len(t) }
 func (t ByTenantId) Swap(i, j int)      { t[i], t[j] = t[j], t[i] }
 func (t ByTenantId) Less(i, j int) bool { return t[i].Id < t[j].Id }
 
-func tenantsHandler(w http.ResponseWriter, r *http.Request) {
+func TenantsHandler(w http.ResponseWriter, r *http.Request) {
 	tenants := map[int]Tenant{}
 	log.Print("tenantshandler - begin")
 	email := r.FormValue("email")
@@ -115,7 +115,7 @@ func tenantsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	sort.Sort(ByTenantId(tenants1))
 	tenantsTemplate := TenantsTemplate{
-		Conf: configuration(),
+		Conf: Config(),
 		Tenants: tenants1,
 	}
 	t.ExecuteTemplate(w, "Tenants", tenantsTemplate)
@@ -163,9 +163,9 @@ func formatMoney(mon string) string {
 	return money.New(val)
 }
 
-func rentRollTemplateHandler(w http.ResponseWriter, r *http.Request) {
+func RentRollTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("rentrolltemplate - begin")
-	conf := configuration()
+	conf := Config()
 	conf.GPlusSigninCallback = "gRentRollTemplate"
 	conf.FacebookSigninCallback = "fbRentRollTemplate"
 	rentroll := RentRoll{Conf: conf}
@@ -178,7 +178,7 @@ func rentRollTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, rentroll)
 }
 
-func addTenantHandler(w http.ResponseWriter, r *http.Request) {
+func AddTenantHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("addTenantHandler - begin")
 	tenantId, _ := AddTenant(r,)
 	w.Write([]byte(strconv.FormatInt(tenantId, 10)))
@@ -200,7 +200,7 @@ func AddTenant(r *http.Request) (int64, bool) {
 		r.FormValue("Comments"))
 }
 
-func updateTenantHandler(w http.ResponseWriter, r *http.Request) {
+func UpdateTenantHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("updateTenantHandler - begin")
 	success := UpdateTenant(r,)
 	w.Write([]byte(strconv.FormatBool(success)))
@@ -224,12 +224,12 @@ func UpdateTenant(r *http.Request) bool {
 		r.FormValue("Comments"))
 }
 
-func removeTenantHandler(w http.ResponseWriter, r *http.Request) {
+func RemoveTenantHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("removeTenantHandler - begin")
 	tenantAction(w, r, dbRemoveTenant)
 }
 
-func undoRemoveTenantHandler(w http.ResponseWriter, r *http.Request) {
+func UndoRemoveTenantHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("undoRemoveTenantHandler - begin")
 	tenantAction(w, r, dbUndoRemoveTenant)
 }
@@ -290,12 +290,12 @@ func updateTenant(dbName string, tenantId int, name, address string, sqft int, s
 	return success
 }
 
-func undoUpdateTenantHandler(w http.ResponseWriter, r *http.Request) {
+func UndoUpdateTenantHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("undoUpdateTenantHandler - begin")
 	tenantAction(w, r, dbUndoUpdateTenant)
 }
 
-func printInvoicesHandler(w http.ResponseWriter, r *http.Request) {
+func PrintInvoicesHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("printInvoicesHandler - begin")
 	pdf := gofpdf.New("P", "in", "Letter", "")
 	pdf.SetFont("Arial", "", 12)

@@ -1,4 +1,4 @@
-package main
+package renroll
 import (
 	"fmt"
 	"log"
@@ -48,9 +48,9 @@ func dbCreate(name string) bool {
 	sqlStmt := `
 	create table tenants
 (id integer not null primary key,
-Action text, ActionTenantId integer, ActionRowId integer, ActionTimeStamp text, 
+Action text, ActionTenantId integer, ActionRowId integer, ActionTimeStamp text,
 Name text, Address text, SqFt integer,
-LeaseStartDate text, LeaseEndDate text, 
+LeaseStartDate text, LeaseEndDate text,
 BaseRent text, Electricity text, Gas text, Water text, SewageTrashRecycle text,
 Comments text);
 	delete from tenants;
@@ -172,7 +172,7 @@ func dbReadTenants(dbName string) map[int]Tenant {
 	}
 	defer db.Close()
 	rows, err := db.Query(`select
-                               id,                               
+                               id,
                                Name, Address, SqFt,
                                LeaseStartDate, LeaseEndDate,
                                BaseRent, Electricity, Gas, Water, SewageTrashRecycle,
@@ -210,7 +210,7 @@ func dbReadTenants(dbName string) map[int]Tenant {
 			&Water,
 			&SewageTrashRecycle,
 			&Comments)
-		
+
 		var tenant = Tenant{
 			Id: id,
 			DbName: dbName,
@@ -243,7 +243,7 @@ func dbReadTenants(dbName string) map[int]Tenant {
 			if new, err := dbUpdatedTenantValues(dbName, tenant.Id); err {
 				tenants[tenant.Id] = new
 			}
-		} 
+		}
 	}
 	return tenants
 }
@@ -363,7 +363,7 @@ func dbRemovedTenantIds (dbName string) []int {
 	}
 	defer db.Close()
 	tenants, err := db.Query(`select
-                               id 
+                               id
                                from tenants where
                                Action='` + ActionInsert + `'`)
 	if err != nil {
@@ -373,7 +373,7 @@ func dbRemovedTenantIds (dbName string) []int {
 	defer tenants.Close()
 
 	rows, err := db.Query(`select
-                               ActionTenantId 
+                               ActionTenantId
                                from tenants where
                                Action='` + ActionRemove + `' and ActionTenantId is not null`)
 	if err != nil {
@@ -382,7 +382,7 @@ func dbRemovedTenantIds (dbName string) []int {
 	}
 	defer rows.Close()
 	rows2, err := db.Query(`select
-                               ActionTenantId 
+                               ActionTenantId
                                from tenants where
                                Action='` + ActionUndoRemove + `' and ActionTenantId is not null`)
 	defer rows2.Close()
@@ -490,7 +490,7 @@ func dbUpdatedTenantValues(dbName string, tenantId int) (Tenant, bool) {
 			&Water,
 			&SewageTrashRecycle,
 			&Comments)
-		
+
 		var tenant = Tenant{
 			Id: tenantId,
 			DbName: dbName,
@@ -511,7 +511,7 @@ func dbUpdatedTenantValues(dbName string, tenantId int) (Tenant, bool) {
 		}
 	}
 
-	
+
 	if len(tenants1) > 0 {
 		fmt.Println("Updated Tenant Values - tenantId:")
 		fmt.Println(tenantId)
@@ -540,7 +540,7 @@ func dbUndoUpdateTenant(dbName string, tenantId int) bool {
 func dbTenantAction(dbName string, action string, prevAction string, tenantId int) bool {
 	if !dbExists(dbName) {
 		return false
-	}	
+	}
 	db, err := sql.Open("sqlite3", "./" + dbName + ".sqlite")
 	if err != nil {
 		logError("Couldn't open database (" + dbName + ")" +
@@ -563,7 +563,7 @@ func dbTenantAction(dbName string, action string, prevAction string, tenantId in
 		rows2.Scan(&prevActionRowId)
 	}
 	rows2.Close()
-	
+
 	tx, err := db.Begin()
 	if err != nil {
 		logError("Couldn't exec begin for database (" + dbName + ")" +
