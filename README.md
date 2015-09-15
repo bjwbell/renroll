@@ -2,4 +2,4 @@
 Rent Roll
 
 ## Building
-    * Add PATH/renroll to GOPATH, e.g. `export $GOPATH="$HOME/renroll"`.
+* Add PATH/renroll to GOPATH, e.g. `export $GOPATH="$HOME/renroll"`.
