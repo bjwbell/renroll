@@ -35,7 +35,7 @@ func RentRollHandler(w http.ResponseWriter, r *http.Request) {
 		Conf: conf,
 		AsOfDateDay: day,
 		AsOfDateMonth: month.String(),
-		AsOfDateYear: strconv.Itoa(time.Now().Year()),
+		AsOfDateYear: strconv.Itoa(year),
 		DefaultLeaseStartDate: start,
 		DefaultLeaseEndDate: end,
 	}
@@ -54,6 +54,9 @@ func RentRollHandler(w http.ResponseWriter, r *http.Request) {
 type TenantsTemplate struct {
 	Conf Configuration	
 	Tenants []Tenant
+	Day string
+	Month string
+	Year string
 }
 
 type Tenant struct {
@@ -73,19 +76,13 @@ type Tenant struct {
 	Comments string
 }
 
-type ByTenantId []Tenant
-
-func (t ByTenantId) Len() int           { return len(t) }
-func (t ByTenantId) Swap(i, j int)      { t[i], t[j] = t[j], t[i] }
-func (t ByTenantId) Less(i, j int) bool { return t[i].Id < t[j].Id }
-
 func TenantsHandler(w http.ResponseWriter, r *http.Request) {
-	tenants := map[int]Tenant{}
+	tenants := []Tenant{}
 	log.Print("tenantshandler - begin")
 	email := r.FormValue("email")
 	if email == "" || email == "dummy@dummy.com" {
 		logError("rentroll - NO EMAIL SET")
-		tenants = map[int]Tenant{-1: Tenant{
+		tenants = []Tenant{Tenant{
 			Id: -1,
 			DbName: "",
 			Name: "#1",
@@ -102,26 +99,28 @@ func TenantsHandler(w http.ResponseWriter, r *http.Request) {
 			Comments: ""}}
 	} else {
 		dbName := email
-		tenants = dbReadTenants(dbName)
+		tenants = dbReadSortedTenants(dbName)
 		formatCurrency(tenants)
 	}
 	t, _ := template.ParseFiles("templates/tenants.html")
 	log.Print("tenanthandler - execute")
-	tenants1 := []Tenant{}
-	for _, tenant := range tenants {
-		tenants1 = append(tenants1, tenant)
-	}
-	sort.Sort(ByTenantId(tenants1))
+	sort.Sort(ByTenantId(tenants))
+	month := time.Now().Month()
+	day := strconv.Itoa(time.Now().Day())
+	year := time.Now().Year()
 	tenantsTemplate := TenantsTemplate{
 		Conf: Config(),
-		Tenants: tenants1,
+		Tenants: tenants,
+		Day: day,
+		Month: month.String(),
+		Year: strconv.Itoa(year),
 	}
 	t.ExecuteTemplate(w, "Tenants", tenantsTemplate)
 }
 
-func formatCurrency(tenants map[int]Tenant) {
-	for id, _ := range tenants {
-		tenant := tenants[id]
+func formatCurrency(tenants []Tenant) {
+	for idx, _ := range tenants {
+		tenant := tenants[idx]
 		tenant.Total = formatMoney(
 			strconv.FormatFloat(parseMoney(tenant.BaseRent) +
 				parseMoney(tenant.Electricity) +
@@ -135,7 +134,7 @@ func formatCurrency(tenants map[int]Tenant) {
 		tenant.Water = formatMoney(tenant.Water)
 		tenant.SewageTrashRecycle = formatMoney(tenant.SewageTrashRecycle)
 		
-		tenants[id] = tenant
+		tenants[idx] = tenant
 	}
 }
 func parseMoney(mon string) float64 {

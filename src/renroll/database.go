@@ -160,6 +160,25 @@ func dbUpdate(dbName string, tenantId int, tenantName, address string, sqft int,
 	return true
 }
 
+type ByTenantId []Tenant
+
+func (t ByTenantId) Len() int           { return len(t) }
+func (t ByTenantId) Swap(i, j int)      { t[i], t[j] = t[j], t[i] }
+func (t ByTenantId) Less(i, j int) bool { return t[i].Id < t[j].Id }
+
+func sortTenants(tenants map[int]Tenant) []Tenant {
+	tenants1 := []Tenant{}
+	for _, tenant := range tenants {
+		tenants1 = append(tenants1, tenant)
+	}
+	sort.Sort(ByTenantId(tenants1))
+	return tenants1
+}
+
+func dbReadSortedTenants(dbName string) []Tenant {
+	return sortTenants(dbReadTenants(dbName))
+}
+
 func dbReadTenants(dbName string) map[int]Tenant {
 	if !dbExists(dbName) {
 		logError("dbReadTenants: CREATING Database (" + dbName + ")")

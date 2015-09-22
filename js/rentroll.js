@@ -115,7 +115,12 @@ function addTenant() {
     });
 }
 
-function printInvoices() {
+function printInvoices(month, year) {
     var dbName = $('#DbName').val();
-    window.location.href = '/printinvoices?DbName=' + dbName;
+    if (month === undefined || month == null || year === undefined || year === null) {
+        console.log("printInvoices - no month/year set");
+        logError("printInvoices - no month/year set");
+    }
+    window.location.href = '/printinvoices?DbName=' + encodeURIComponent(dbName) +
+        '&month=' + encodeURIComponent(month) + '&year=' + encodeURIComponent(year);
 }
