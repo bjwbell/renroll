@@ -1,24 +1,26 @@
 package renroll
+
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
-	"html/template"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
+
 	"github.com/joiggama/money"
 )
 
+// the rentroll struct holds...
 type RentRoll struct {
-	Conf Configuration
-	AsOfDateDay string
-	AsOfDateMonth string
-	AsOfDateYear  string
+	Conf                  Configuration
+	AsOfDateDay           string
+	AsOfDateMonth         string
+	AsOfDateYear          string
 	DefaultLeaseStartDate string
-	DefaultLeaseEndDate string
-
+	DefaultLeaseEndDate   string
 }
 
 func RentRollHandler(w http.ResponseWriter, r *http.Request) {
@@ -30,14 +32,15 @@ func RentRollHandler(w http.ResponseWriter, r *http.Request) {
 	day := strconv.Itoa(time.Now().Day())
 	year := time.Now().Year()
 	start := strconv.Itoa(int(month)) + "/" + day + "/" + strconv.Itoa(year)
-	end := strconv.Itoa(int(month)) + "/" + day + "/" + strconv.Itoa(year + 3)
+	end := strconv.Itoa(int(month)) + "/" + day + "/" + strconv.Itoa(year+3)
+
 	rentroll := RentRoll{
-		Conf: conf,
-		AsOfDateDay: day,
-		AsOfDateMonth: month.String(),
-		AsOfDateYear: strconv.Itoa(year),
+		Conf:                  conf,
+		AsOfDateDay:           day,
+		AsOfDateMonth:         month.String(),
+		AsOfDateYear:          strconv.Itoa(year),
 		DefaultLeaseStartDate: start,
-		DefaultLeaseEndDate: end,
+		DefaultLeaseEndDate:   end,
 	}
 	if r.FormValue("Name") != "" {
 		AddTenant(r)
@@ -52,30 +55,31 @@ func RentRollHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 type TenantsTemplate struct {
-	Conf Configuration	
+	Conf    Configuration
 	Tenants []Tenant
-	Day string
-	Month string
-	Year string
+	Day     string
+	Month   string
+	Year    string
 }
 
 type Tenant struct {
-	Id int
-	DbName string
-	Name string
-	Address string
-	SqFt int
-	LeaseStartDate string
-	LeaseEndDate string
-	BaseRent string
-	Electricity string
-	Gas string
-	Water string
+	Id                 int
+	DbName             string
+	Name               string
+	Address            string
+	SqFt               int
+	LeaseStartDate     string
+	LeaseEndDate       string
+	BaseRent           string
+	Electricity        string
+	Gas                string
+	Water              string
 	SewageTrashRecycle string
-	Total string
-	Comments string
+	Total              string
+	Comments           string
 }
 
+// The tenants handler
 func TenantsHandler(w http.ResponseWriter, r *http.Request) {
 	tenants := []Tenant{}
 	log.Print("tenantshandler - begin")
@@ -83,20 +87,20 @@ func TenantsHandler(w http.ResponseWriter, r *http.Request) {
 	if email == "" || email == "dummy@dummy.com" {
 		logError("rentroll - NO EMAIL SET")
 		tenants = []Tenant{Tenant{
-			Id: -1,
-			DbName: "",
-			Name: "#1",
-			Address: "",
-			SqFt: 0,
-			LeaseStartDate: "",
-			LeaseEndDate: "",
-			BaseRent: "0",
-			Electricity: "0",
-			Gas: "0",
-			Water: "0",
+			Id:                 -1,
+			DbName:             "",
+			Name:               "#1",
+			Address:            "",
+			SqFt:               0,
+			LeaseStartDate:     "",
+			LeaseEndDate:       "",
+			BaseRent:           "0",
+			Electricity:        "0",
+			Gas:                "0",
+			Water:              "0",
 			SewageTrashRecycle: "0",
-			Total: "0",
-			Comments: ""}}
+			Total:              "0",
+			Comments:           ""}}
 	} else {
 		dbName := email
 		tenants = dbReadSortedTenants(dbName)
@@ -109,11 +113,11 @@ func TenantsHandler(w http.ResponseWriter, r *http.Request) {
 	day := strconv.Itoa(time.Now().Day())
 	year := time.Now().Year()
 	tenantsTemplate := TenantsTemplate{
-		Conf: Config(),
+		Conf:    Config(),
 		Tenants: tenants,
-		Day: day,
-		Month: month.String(),
-		Year: strconv.Itoa(year),
+		Day:     day,
+		Month:   month.String(),
+		Year:    strconv.Itoa(year),
 	}
 	t.ExecuteTemplate(w, "Tenants", tenantsTemplate)
 }
@@ -122,18 +126,18 @@ func formatCurrency(tenants []Tenant) {
 	for idx, _ := range tenants {
 		tenant := tenants[idx]
 		tenant.Total = formatMoney(
-			strconv.FormatFloat(parseMoney(tenant.BaseRent) +
-				parseMoney(tenant.Electricity) +
-				parseMoney(tenant.Gas) +
-				parseMoney(tenant.Water) +
-				parseMoney(tenant.SewageTrashRecycle),'f', -1, 64))
-		
+			strconv.FormatFloat(parseMoney(tenant.BaseRent)+
+				parseMoney(tenant.Electricity)+
+				parseMoney(tenant.Gas)+
+				parseMoney(tenant.Water)+
+				parseMoney(tenant.SewageTrashRecycle), 'f', -1, 64))
+
 		tenant.BaseRent = formatMoney(tenant.BaseRent)
 		tenant.Electricity = formatMoney(tenant.Electricity)
 		tenant.Gas = formatMoney(tenant.Gas)
 		tenant.Water = formatMoney(tenant.Water)
 		tenant.SewageTrashRecycle = formatMoney(tenant.SewageTrashRecycle)
-		
+
 		tenants[idx] = tenant
 	}
 }
@@ -146,7 +150,7 @@ func parseMoney(mon string) float64 {
 		return -1
 	}
 	return val
-	
+
 }
 func formatMoney(mon string) string {
 	if mon == "" {
@@ -177,7 +181,7 @@ func RentRollTemplateHandler(w http.ResponseWriter, r *http.Request) {
 
 func AddTenantHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("addTenantHandler - begin")
-	tenantId, _ := AddTenant(r,)
+	tenantId, _ := AddTenant(r)
 	w.Write([]byte(strconv.FormatInt(tenantId, 10)))
 }
 
@@ -199,7 +203,7 @@ func AddTenant(r *http.Request) (int64, bool) {
 
 func UpdateTenantHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("updateTenantHandler - begin")
-	success := UpdateTenant(r,)
+	success := UpdateTenant(r)
 	w.Write([]byte(strconv.FormatBool(success)))
 }
 
@@ -231,7 +235,6 @@ func UndoRemoveTenantHandler(w http.ResponseWriter, r *http.Request) {
 	tenantAction(w, r, dbUndoRemoveTenant)
 }
 
-
 func tenantAction(w http.ResponseWriter, r *http.Request, action func(db string, id int) bool) {
 	log.Print("tenantAction - begin")
 	success := true
@@ -252,7 +255,7 @@ func tenantAction(w http.ResponseWriter, r *http.Request, action func(db string,
 func addTenant(dbName, name, address string, sqft int, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments string) (int64, bool) {
 	if name == "" {
 		logError("addtenant - NO NAME SET")
-		return  -1, false
+		return -1, false
 	}
 	log.Print("addtenant - name")
 	log.Print(name)
@@ -274,7 +277,7 @@ func addTenant(dbName, name, address string, sqft int, start, end, baseRent, ele
 func updateTenant(dbName string, tenantId int, name, address string, sqft int, start, end, baseRent, electricity, gas, water, sewageTrashRecycle, comments string) bool {
 	if name == "" {
 		logError("addtenant - NO NAME SET")
-		return  false
+		return false
 	}
 	if dbName == "" {
 		logError("addtenant - NO DBNAME SET")
@@ -291,5 +294,3 @@ func UndoUpdateTenantHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("undoUpdateTenantHandler - begin")
 	tenantAction(w, r, dbUndoUpdateTenant)
 }
-
-

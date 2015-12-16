@@ -2,11 +2,11 @@ package renroll
 
 import (
 	"encoding/json"
-	"net/http"
-	"log"
-	"os"
-	"net/smtp"
 	"fmt"
+	"log"
+	"net/http"
+	"net/smtp"
+	"os"
 	"runtime"
 )
 
@@ -20,7 +20,7 @@ type Configuration struct {
 	GoogleAnalyticsId      string
 	FacebookScopes         string
 	FacebookAppId          string
-	FacebookSigninCallback    string
+	FacebookSigninCallback string
 }
 
 func Config() Configuration {
@@ -33,26 +33,23 @@ func Config() Configuration {
 	}
 	return configuration
 }
-
 func domain(r *http.Request) string {
 	return r.Host
 }
-
 func SendAdminEmail(emailAddress string, subject string, body string) {
 	configuration := Config()
 	content :=
 		"To: " + configuration.GmailAddress + "\r\n" +
-		"Subject: " + subject + "\r\n\r\n" +
-		body
+			"Subject: " + subject + "\r\n\r\n" +
+			body
 	auth := smtp.PlainAuth("", configuration.GmailAddress, configuration.GmailPassword, "smtp.gmail.com")
 	err := smtp.SendMail("smtp.gmail.com:587", auth, emailAddress,
-		[]string{configuration.GmailAddress},[]byte(content))
+		[]string{configuration.GmailAddress}, []byte(content))
 	if err != nil {
 		log.Print("sendEmail - ERROR:")
 		log.Fatal(err)
 	}
 }
-
 func InterestedUser(emailAddress string, loginMethod string) {
 	subject := "Renroll Notification Clicked (" + emailAddress + ")"
 	body := "Interested user: " + emailAddress + ".\r\n" +
@@ -66,6 +63,8 @@ func LogErrorHandler(w http.ResponseWriter, r *http.Request) {
 	SendAdminEmail(Config().GmailAddress, "Renroll JS Error", error)
 }
 
+// The logError function prints the error to log.Print and also emails it to the email
+// address, GmailAddress, in the config file
 func logError(error string) {
 	buf := make([]byte, 1<<16)
 	runtime.Stack(buf, true)
