@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <title>Upload Lease(s)</title>
+        {{template "Header" .}}
+        <link rel="stylesheet" type="text/css" href="css/contact.css" />
+    </head>
+    <body>
+        {{template "Topbar" .}}
+        <div class="body-content">
+            <h2>Upload Tenant Leases</h2>
+            <form action="upload" method="post" enctype="multipart/form-data">
+                <label for="file">Lease </label>
+                <input type="file" name="file" id="file">
+                <input type="submit" name="submit" value="Upload">
+            </form>
+        </div>
+        <br>
+        <br>
+        {{template "Bottombar"}}
+    </body>
+</html>

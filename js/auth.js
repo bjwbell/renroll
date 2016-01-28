@@ -232,3 +232,9 @@ function setSettings(name, email) {
     nameEle.innerHTML = name;
     emailEle.innerHTML = email;
 }
+
+function gDummy(resp) {
+}
+
+function fbDummy() {
+}

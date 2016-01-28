@@ -1,9 +1,9 @@
 package main
 
 import (
-	"net/http"
 	"html/template"
 	"log"
+	"net/http"
 	"renroll"
 )
 
@@ -75,6 +75,7 @@ func main() {
 	http.HandleFunc("/updatetenant", renroll.UpdateTenantHandler)
 	http.HandleFunc("/undoremovetenant", renroll.UndoRemoveTenantHandler)
 	http.HandleFunc("/undoupdatetenant", renroll.UndoUpdateTenantHandler)
+	http.HandleFunc("/upload", renroll.UploadHandler)
 
 	http.Handle("/", http.FileServer(http.Dir("./")))
 	if http.ListenAndServe(":80", nil) != nil {
