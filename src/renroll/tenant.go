@@ -1,26 +1,20 @@
 package renroll
+
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
-	"html/template"
 	"strconv"
 )
-
-type TenantTemplate struct {
-	Conf Configuration
-
-}
 
 func TenantHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("tenantHandler - begin")
 	conf := Config()
 	conf.GPlusSigninCallback = "gTenant"
 	conf.FacebookSigninCallback = "fbTenant"
-	tenant := TenantTemplate {
-		Conf: conf,
-	};
+	tenant := struct{ Conf Configuration }{Config()}
 	t, _ := template.ParseFiles(
 		"tenant.html",
 		"templates/header.html",
@@ -45,7 +39,7 @@ func TenantDataHandler(w http.ResponseWriter, r *http.Request) {
 func TenantsDataHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("tenanstDataHandler - begin")
 	dbName := r.FormValue("DbName")
-	tenants := map[string]Tenant{ }
+	tenants := map[string]Tenant{}
 	for tenantId, tenant := range dbReadTenants(dbName) {
 		tenants[strconv.Itoa(tenantId)] = tenant
 	}

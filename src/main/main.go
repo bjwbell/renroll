@@ -7,20 +7,16 @@ import (
 	"renroll"
 )
 
-type Index struct {
-	Conf renroll.Configuration
-}
-
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("indexhandler - start")
-	index := Index{Conf: renroll.Config()}
+	index := struct{ Conf renroll.Configuration }{renroll.Config()}
 	t, _ := template.ParseFiles("idx.html", "templates/header.html", "templates/topbar.html", "templates/bottombar.html")
 	log.Print("indexhandler - execute")
 	t.Execute(w, index)
 }
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
-	about := Index{Conf: renroll.Config()}
+	about := struct{ Conf renroll.Configuration }{renroll.Config()}
 	t, _ := template.ParseFiles(
 		"about.html",
 		"templates/header.html",
@@ -30,7 +26,7 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func contactHandler(w http.ResponseWriter, r *http.Request) {
-	about := Index{Conf: renroll.Config()}
+	about := struct{ Conf renroll.Configuration }{renroll.Config()}
 	t, _ := template.ParseFiles(
 		"contact.html",
 		"templates/header.html",
@@ -39,8 +35,20 @@ func contactHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, about)
 }
 
+func unreleasedHandler(w http.ResponseWriter, r *http.Request) {
+	conf := struct{ Conf renroll.Configuration }{renroll.Config()}
+	conf.Conf.GPlusSigninCallback = "gSettings"
+	conf.Conf.FacebookSigninCallback = "fbSettings"
+	t, _ := template.ParseFiles(
+		"unreleased.html",
+		"templates/header.html",
+		"templates/topbar.html",
+		"templates/bottombar.html")
+	t.Execute(w, conf)
+}
+
 func settingsHandler(w http.ResponseWriter, r *http.Request) {
-	conf := Index{Conf: renroll.Config()}
+	conf := struct{ Conf renroll.Configuration }{renroll.Config()}
 	conf.Conf.GPlusSigninCallback = "gSettings"
 	conf.Conf.FacebookSigninCallback = "fbSettings"
 	t, _ := template.ParseFiles(
@@ -75,6 +83,7 @@ func main() {
 	http.HandleFunc("/updatetenant", renroll.UpdateTenantHandler)
 	http.HandleFunc("/undoremovetenant", renroll.UndoRemoveTenantHandler)
 	http.HandleFunc("/undoupdatetenant", renroll.UndoUpdateTenantHandler)
+	http.HandleFunc("/unreleased", unreleasedHandler)
 	http.HandleFunc("/upload", renroll.UploadHandler)
 
 	http.Handle("/", http.FileServer(http.Dir("./")))
