@@ -4,7 +4,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"renroll"
+
+	"github.com/bjwbell/renroll/src/renroll"
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
