@@ -88,13 +88,22 @@ func main() {
 	http.HandleFunc("/upload", renroll.UploadHandler)
 
 	http.Handle("/", http.FileServer(http.Dir("./")))
-	err := http.ListenAndServe(":80", nil)
-	if err == nil {
-		err := http.ListenAndServeTLS(":443", "/etc/letsencrypt/live/renroll.com/cert.pem", "/etc/letsencrypt/live/renroll.com/privkey.pem", nil)
+	go func() {
+		err := http.ListenAndServe(":80", nil)
 		if err != nil {
-			log.Fatal("HTTPS ListenAndServe: ", err)
+			panic(http.ListenAndServe(":8080", nil))
 		}
-	} else {
-		panic(http.ListenAndServe(":8080", nil))
+	}()
+
+	cert := "/etc/letsencrypt/live/renroll.com/cert.pem"
+	privkey := "/etc/letsencrypt/live/renroll.com/privkey.pem"
+	err := http.ListenAndServeTLS(":443", cert, privkey, nil)
+	if err != nil {
+		cert = "./src/generate_cert/cert.pem"
+		privkey = "./src/generate_cert/key.pem"
+		err = http.ListenAndServeTLS(":10443", cert, privkey, nil)
+		if err != nil {
+			log.Print("HTTPS ListenAndServe: ", err)
+		}
 	}
 }
