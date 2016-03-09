@@ -95,7 +95,7 @@ function startFBLogin() {
         FB.init({
             appId      : FacebookAppId,
             xfbml      : true,
-            version    : 'v2.3'
+            version    : 'v2.5'
         });
         FB.getLoginStatus(function (response) {
             fbLogin(response);
